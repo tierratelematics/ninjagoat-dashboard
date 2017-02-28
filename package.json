@@ -1,0 +1,26 @@
+{
+  "name": "ninjagoat-dashboard",
+  "version": "0.0.1",
+  "dependencies": {
+    "@types/lodash": "~4.14.44",
+    "@types/node": "~6.0.52",
+    "@types/react": "~0.14.55",
+    "inversify": "~3.0.0-rc.2",
+    "lodash": "~4.10.0",
+    "reflect-metadata": "~0.1.3",
+    "rx": "~4.1.0"
+  },
+  "devDependencies": {
+    "@types/expect.js": "~0.3.29",
+    "@types/mocha": "~2.2.34",
+    "expect.js": "~0.3.1"
+  },
+  "peerDependencies": {
+    "ninjagoat": "^1.0.0"
+  },
+  "scripts": {
+    "test": "smild test"
+  },
+  "main": "dist/ninjagoat-dashboard.js",
+  "typings": "declarations/ninjagoat-dashboard.d.ts"
+}
