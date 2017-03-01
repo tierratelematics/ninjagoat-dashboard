@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import expect = require("expect.js");
+import * as TypeMoq from "typemoq";
 
 describe("Given a widget registry", () => {
 
