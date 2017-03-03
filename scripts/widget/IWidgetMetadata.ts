@@ -1,6 +1,6 @@
 import WidgetSize from "./WidgetSize";
 
-interface IWidgetProps {
+interface IWidgetMetadata {
     name: string;
     description?: string;
     title: string;
@@ -9,4 +9,4 @@ interface IWidgetProps {
     thumbnail?: string;
 }
 
-export default IWidgetProps
+export default IWidgetMetadata

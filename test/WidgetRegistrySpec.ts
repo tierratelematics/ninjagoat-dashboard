@@ -3,7 +3,7 @@ import expect = require("expect.js");
 import WidgetRegistry from "../scripts/registry/WidgetRegistry";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable} from "rx";
-import IWidgetProps from "../scripts/widget/IWidgetProps";
+import IWidgetProps from "../scripts/widget/IWidgetMetadata";
 
 describe("Given a widget registry", () => {
 
