@@ -45,7 +45,7 @@ describe("Given a DashboardViewModel", () => {
         context("and there are no widgets", () => {
             it("should not construct anything", () => {
                 subject.observe(data);
-                data.onNext(ModelState.Ready([]);
+                data.onNext(ModelState.Ready(null);
 
                 expect(subject.viewmodels).to.have.length(0);
             });
