@@ -1,7 +1,7 @@
 import {interfaces} from "inversify";
 import {IViewModel} from "ninjagoat";
 import {IObservable} from "rx";
-import IWidgetProps from "../widget/IWidgetMetadata";
+import IWidgetProps from "./IWidgetMetadata";
 
 interface IWidgetEntry<T> {
     construct: interfaces.Newable<IViewModel<T>>;

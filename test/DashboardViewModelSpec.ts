@@ -2,7 +2,6 @@ import "reflect-metadata";
 import expect = require("expect.js");
 import {Mock, IMock, Times, It} from "typemoq";
 import DashboardViewModel from "../scripts/viewmodel/DashboardViewModel";
-import IWidgetRegistry from "../scripts/registry/IWidgetRegistry";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import IWidgetProps from "../scripts/widget/IWidgetProps";
@@ -12,8 +11,7 @@ describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;
 
     beforeEach(() => {
-        let registry = Mock.ofType<IWidgetRegistry>();
-        registry.setup(r => r.widgets()).returns(() => [{
+        subject = new DashboardViewModel([{
             construct: MockViewModel,
             observable: context => Observable.empty(),
             props: {
@@ -21,7 +19,6 @@ describe("Given a DashboardViewModel", () => {
                 sizes: ["SMALL"]
             }
         }]);
-        subject = new DashboardViewModel(registry.object);
     });
 
     context("on startup", () => {
