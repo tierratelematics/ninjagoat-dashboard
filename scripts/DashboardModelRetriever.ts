@@ -3,6 +3,8 @@ import {ViewModelContext} from "ninjagoat";
 import {Observable} from "rx";
 import {inject, injectable} from "inversify";
 import IReactiveSettingsManager from "./settings/IReactiveSettingsManager";
+import Dashboard from "./viewmodel/Dashboard";
+import IWidgetProps from "./widget/IWidgetProps";
 
 @injectable()
 class DashboardModelRetriever implements IModelRetriever {
@@ -11,12 +13,16 @@ class DashboardModelRetriever implements IModelRetriever {
 
     }
 
-    modelFor<T>(context: ViewModelContext): Observable<ModelState<T>> {
+    modelFor(context: ViewModelContext): Observable<ModelState<Dashboard>> {
         context.parameters = context.parameters || {};
         let dashboardName = context.parameters.name ? context.parameters.name : "default";
-        return Observable.fromPromise<T>(this.settingsManager.getValueAsync<T>(`ninjagoat.dashboard:${dashboardName}`))
-            .map(settings => ModelState.Ready<T>(settings))
-            .startWith(ModelState.Loading<T>());
+        return Observable.fromPromise(this.settingsManager.getValueAsync<IWidgetProps[]>(`ninjagoat.dashboard:${dashboardName}`))
+            .map(settings => ModelState.Ready<Dashboard>({
+                name: dashboardName,
+                widgets: settings
+            }))
+            .catch(error => Observable.just(ModelState.Failed(error)))
+            .startWith(ModelState.Loading<Dashboard>());
     }
 
 }
