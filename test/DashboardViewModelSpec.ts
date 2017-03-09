@@ -79,14 +79,16 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
                 }, {
                     id: "9292382",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
@@ -99,7 +101,8 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {city: "test"}
@@ -114,7 +117,8 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
@@ -123,14 +127,16 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
                 }, {
                     id: "9292382",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
@@ -146,14 +152,16 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
                 }, {
                     id: "9292382",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
@@ -162,7 +170,8 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
@@ -182,7 +191,8 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {city: "test"}
@@ -204,7 +214,8 @@ describe("Given a DashboardViewModel", () => {
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                 id: "unique-id",
                 name: "test",
-                size: "SMALL",
+                w: 100,
+                h: 100,
                 x: 0,
                 y: Infinity,
                 configuration: null
@@ -217,7 +228,8 @@ describe("Given a DashboardViewModel", () => {
             setWidgets([{
                 id: "unique-id",
                 name: "test",
-                size: "SMALL",
+                w: 0,
+                h: 0,
                 x: 0,
                 y: 0,
                 configuration: null
@@ -236,7 +248,8 @@ describe("Given a DashboardViewModel", () => {
             setWidgets([{
                 id: "2882082",
                 name: "test",
-                size: "SMALL",
+                w: 0,
+                h: 0,
                 x: 100,
                 y: 100,
                 configuration: {city: "test"}
@@ -262,7 +275,8 @@ describe("Given a DashboardViewModel", () => {
             setWidgets([{
                 id: "2882082",
                 name: "test",
-                size: "SMALL",
+                w: 0,
+                h: 0,
                 x: 100,
                 y: 100,
                 configuration: {city: "test"}
@@ -278,14 +292,16 @@ describe("Given a DashboardViewModel", () => {
             setWidgets([{
                 id: "2882082",
                 name: "test",
-                size: "SMALL",
+                w: 0,
+                h: 0,
                 x: 100,
                 y: 100,
                 configuration: {}
             }, {
                 id: "9292382",
                 name: "configurable",
-                size: "SMALL",
+                w: 0,
+                h: 0,
                 x: 100,
                 y: 100,
                 configuration: {}
@@ -306,19 +322,63 @@ describe("Given a DashboardViewModel", () => {
                 settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                     id: "2882082",
                     name: "test",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {}
                 }, {
                     id: "9292382",
                     name: "configurable",
-                    size: "SMALL",
+                    w: 0,
+                    h: 0,
                     x: 100,
                     y: 100,
                     configuration: {city: "test"}
                 }])), Times.once());
             });
+        });
+    });
+
+    context("when the layout changes", () => {
+        it("should be saved to settings", () => {
+            setWidgets([{
+                id: "2882082",
+                name: "test",
+                w: 0,
+                h: 0,
+                x: 100,
+                y: 100,
+                configuration: {}
+            }]);
+            subject.layoutChange([{
+                i: "2882082",
+                w: 0,
+                h: 0,
+                x: 200,
+                y: 100
+            }]);
+
+            settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
+                id: "2882082",
+                name: "test",
+                w: 0,
+                h: 0,
+                x: 200,
+                y: 100,
+                configuration: {}
+            }])), Times.once());
+        });
+    });
+
+    context("when the breakpoints changes", () => {
+        it("should refresh the view", (done) => {
+            subject.subscribe(change => {
+                expect(subject.breakpoint).to.be("lg");
+                expect(subject.cols).to.be(6);
+                done();
+            });
+            subject.breakpointChange("lg", 6);
         });
     });
 });

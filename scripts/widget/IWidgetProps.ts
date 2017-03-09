@@ -1,9 +1,8 @@
-import WidgetSize from "./WidgetSize";
-
 interface IWidgetProps<T> {
     id: string;
     name: string;
-    size: WidgetSize;
+    w: number;
+    h: number;
     x: number;
     y: number;
     configuration: T;
