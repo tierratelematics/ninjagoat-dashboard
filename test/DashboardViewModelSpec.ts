@@ -10,30 +10,40 @@ import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManag
 import {IUUIDGenerator} from "../scripts/UUIDGenerator";
 import Dashboard from "../scripts/viewmodel/Dashboard";
 import IWidgetProps from "../scripts/widget/IWidgetProps";
+import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;
     let viewmodelFactory: IMock<IViewModelFactory>;
     let settingsManager: IMock<IReactiveSettingsManager>;
     let uuidGenerator: IMock<IUUIDGenerator>;
-    let data: Subject<Dashboard>;
+    let data: Subject<ModelState<Dashboard>>;
 
     beforeEach(() => {
-        data = new Subject<Dashboard>();
+        data = new Subject<ModelState<Dashboard>>();
         settingsManager = Mock.ofType<IReactiveSettingsManager>();
         viewmodelFactory = Mock.ofType<IViewModelFactory>();
-        subject = new DashboardViewModel([{
-            construct: MockViewModel,
-            observable: context => Observable.empty(),
-            props: {
-                name: "test",
-                sizes: ["SMALL"]
-            }
-        }], viewmodelFactory.object, settingsManager.object, uuidGenerator.object);
+        uuidGenerator = Mock.ofType<IUUIDGenerator>();
+        subject = new DashboardViewModel([
+            {
+                construct: MockViewModel,
+                observable: context => Observable.empty(),
+                props: {
+                    name: "test",
+                    sizes: ["SMALL"]
+                }
+            }, {
+                construct: ConfigurableViewModel,
+                observable: context => Observable.empty(),
+                props: {
+                    name: "configurable",
+                    sizes: ["SMALL"]
+                }
+            }], viewmodelFactory.object, settingsManager.object, uuidGenerator.object);
         subject.observe(data);
     });
 
-    function setWidgets(widgets: IWidgetProps[]) {
+    function setWidgets(widgets: IWidgetProps<any>[]) {
         data.onNext(ModelState.Ready({
             name: "test",
             widgets: widgets
@@ -154,7 +164,7 @@ describe("Given a DashboardViewModel", () => {
         });
         it("should add it to settings", () => {
             setWidgets([]);
-            subject.addWidget("test");
+            subject.add("test");
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                 id: "unique-id",
                 name: "test",
@@ -176,12 +186,57 @@ describe("Given a DashboardViewModel", () => {
                 y: 0,
                 configuration: null
             }]);
-            subject.removeWidget("unique-id");
+            subject.remove("unique-id");
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([])), Times.once());
         });
     });
 
     context("when a new configuration is applied to a widget", () => {
-        it("should be saved");
+        beforeEach(() => {
+            setWidgets([{
+                id: "2882082",
+                name: "test",
+                size: "SMALL",
+                x: 100,
+                y: 100,
+                configuration: {}
+            }, {
+                id: "9292382",
+                name: "configurable",
+                size: "SMALL",
+                x: 100,
+                y: 100,
+                configuration: {}
+            }]);
+        });
+        context("and a widget has no configuration method", () => {
+            it("should not be saved", () => {
+                subject.configure("2882082");
+
+                settingsManager.verify(s => s.setValueAsync(It.isAny(), It.isAny()), Times.never());
+            });
+        });
+
+        context("and a widget has a configuration method", () => {
+            it("should be saved", () => {
+                subject.configure("2882082");
+
+                settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
+                    id: "2882082",
+                    name: "test",
+                    size: "SMALL",
+                    x: 100,
+                    y: 100,
+                    configuration: {}
+                }, {
+                    id: "9292382",
+                    name: "configurable",
+                    size: "SMALL",
+                    x: 100,
+                    y: 100,
+                    configuration: {city: "test"}
+                }])), Times.once());
+            });
+        });
     });
 });

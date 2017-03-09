@@ -1,6 +1,7 @@
 interface IWidgetManager {
-    addWidget(name: string);
-    removeWidget(id: string);
+    add(name: string);
+    remove(id: string);
+    configure(id: string);
 }
 
 export default IWidgetManager
