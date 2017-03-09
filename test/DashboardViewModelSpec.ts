@@ -5,7 +5,7 @@ import DashboardViewModel from "../scripts/viewmodel/DashboardViewModel";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
-import {IViewModelFactory} from "ninjagoat";
+import {IViewModelFactory, IViewModelRegistry, RegistryEntry} from "ninjagoat";
 import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManager";
 import {IUUIDGenerator} from "../scripts/UUIDGenerator";
 import Dashboard from "../scripts/viewmodel/Dashboard";
@@ -18,12 +18,18 @@ describe("Given a DashboardViewModel", () => {
     let settingsManager: IMock<IReactiveSettingsManager>;
     let uuidGenerator: IMock<IUUIDGenerator>;
     let data: Subject<ModelState<Dashboard>>;
+    let registry: IMock<IViewModelRegistry>;
 
     beforeEach(() => {
         data = new Subject<ModelState<Dashboard>>();
         settingsManager = Mock.ofType<IReactiveSettingsManager>();
         viewmodelFactory = Mock.ofType<IViewModelFactory>();
         uuidGenerator = Mock.ofType<IUUIDGenerator>();
+        registry = Mock.ofType<IViewModelRegistry>();
+        registry.setup(r => r.getAreas()).returns(() => [{
+            area: "dashboard",
+            entries: [new RegistryEntry(DashboardViewModel, "Dashboard", context => Observable.empty<any>(), null)]
+        }]);
         subject = new DashboardViewModel([
             {
                 construct: MockViewModel,
@@ -39,7 +45,8 @@ describe("Given a DashboardViewModel", () => {
                     name: "configurable",
                     sizes: ["SMALL"]
                 }
-            }], viewmodelFactory.object, settingsManager.object, uuidGenerator.object);
+            }
+        ], viewmodelFactory.object, settingsManager.object, uuidGenerator.object, registry.object);
         subject.observe(data);
     });
 
@@ -52,14 +59,8 @@ describe("Given a DashboardViewModel", () => {
 
     context("on startup", () => {
         it("should expose the registered widgets", () => {
-            expect(subject.widgets).to.eql([{
-                construct: MockViewModel,
-                observable: context => Observable.empty(),
-                props: {
-                    name: "test",
-                    sizes: ["SMALL"]
-                }
-            }]);
+            expect(subject.widgets[0].construct).to.be(MockViewModel);
+            expect(subject.widgets[1].construct).to.be(ConfigurableViewModel);
         });
     });
 
@@ -93,6 +94,21 @@ describe("Given a DashboardViewModel", () => {
 
                 expect(subject.viewmodels[0] instanceof MockViewModel).to.be(true);
                 expect(subject.viewmodels[1] instanceof MockViewModel).to.be(true);
+            });
+            it("should create the observable using the right name and configuration", () => {
+                setWidgets([{
+                    id: "2882082",
+                    name: "test",
+                    size: "SMALL",
+                    x: 100,
+                    y: 100,
+                    configuration: {city: "test"}
+                }]);
+
+                viewmodelFactory.verify(v => v.create(It.isValue({
+                    area: "dashboard",
+                    viewmodel: new RegistryEntry(MockViewModel, "Dashboard:Mock", It.isAny(), null)
+                }), It.isValue({city: "test"})), Times.once());
             });
             it("should leave the other viewmodels untouched", () => {
                 setWidgets([{
@@ -155,6 +171,26 @@ describe("Given a DashboardViewModel", () => {
                 expect(subject.viewmodels).to.have.length(1);
                 expect(subject.viewmodels[0]).to.be(viewmodel);
             });
+            it("should dispose the subscriptions", () => {
+                let source = new Subject<any>();
+                viewmodelFactory.setup(v => v.create(It.isAny(), It.isAny())).returns(() => {
+                    let viewmodel = new MockViewModel();
+                    viewmodel.observe(source);
+                    return viewmodel;
+                });
+
+                setWidgets([{
+                    id: "2882082",
+                    name: "test",
+                    size: "SMALL",
+                    x: 100,
+                    y: 100,
+                    configuration: {city: "test"}
+                }]);
+                subject.remove("2882082");
+
+                expect(source.hasObservers()).to.be(false);
+            });
         });
     });
 
@@ -170,7 +206,7 @@ describe("Given a DashboardViewModel", () => {
                 name: "test",
                 size: "SMALL",
                 x: 0,
-                y: 0,
+                y: Infinity,
                 configuration: null
             }])), Times.once());
         });
@@ -188,6 +224,52 @@ describe("Given a DashboardViewModel", () => {
             }]);
             subject.remove("unique-id");
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([])), Times.once());
+        });
+    });
+
+    context("when a widget triggers a new state", () => {
+        beforeEach(() => {
+            viewmodelFactory.setup(v => v.create(It.isAny(), It.isAny())).returns(() => new MockViewModel());
+        });
+        it("should reflect those changes in the view", () => {
+            let notifications = [];
+            setWidgets([{
+                id: "2882082",
+                name: "test",
+                size: "SMALL",
+                x: 100,
+                y: 100,
+                configuration: {city: "test"}
+            }]);
+            subject.subscribe(change => notifications.push(change));
+            (<MockViewModel<any>>subject.viewmodels[0]).triggerStateChange();
+
+            expect(notifications).to.have.length(1);
+        });
+    });
+
+    context("when disposing the viewmodel", () => {
+        let source: Subject<any>;
+        beforeEach(() => {
+            source = new Subject<any>();
+            viewmodelFactory.setup(v => v.create(It.isAny(), It.isAny())).returns(() => {
+                let viewmodel = new MockViewModel();
+                viewmodel.observe(source);
+                return viewmodel;
+            });
+        });
+        it("should dispose also the viewmodels subscriptions", () => {
+            setWidgets([{
+                id: "2882082",
+                name: "test",
+                size: "SMALL",
+                x: 100,
+                y: 100,
+                configuration: {city: "test"}
+            }]);
+            subject.dispose();
+
+            expect(source.hasObservers()).to.be(false);
         });
     });
 
