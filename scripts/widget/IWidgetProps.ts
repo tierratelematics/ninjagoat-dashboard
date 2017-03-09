@@ -1,12 +1,12 @@
 import WidgetSize from "./WidgetSize";
 
-interface IWidgetProps {
+interface IWidgetProps<T> {
     id: string;
     name: string;
     size: WidgetSize;
     x: number;
     y: number;
-    configuration: any;
+    configuration: T;
 }
 
 export default IWidgetProps
