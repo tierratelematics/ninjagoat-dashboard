@@ -15,6 +15,7 @@ import IWidgetProps from "../widget/IWidgetProps";
 @ViewModel("Dashboard")
 class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
 
+    settings: IWidgetProps<any>[] = [];
     viewmodels: IViewModel<any>[] = [];
     widgets: IWidgetEntry<any>[] = [];
     breakpoint: string;
@@ -50,6 +51,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
     }
 
     private constructViewModels(props: IWidgetProps<any>[]) {
+        this.settings = props;
         this.viewmodels = _.map<IWidgetProps<any>, IViewModel<any>>(props, prop => {
             let widgetEntry = _.find(this.widgets, widget => widget.name === prop.name);
             let viewmodelConstructor = widgetEntry.construct;
@@ -76,6 +78,15 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
     }
 
     add(name: string, size: WidgetSize) {
+        this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, _.union(this.settings, [{
+            id: this.guidGenerator.generate(),
+            name: name,
+            w: this.config.sizes[size].width,
+            h: this.config.sizes[size].height,
+            x: 0,
+            y: Infinity,
+            configuration: {}
+        }]));
     }
 
     remove(id: string) {

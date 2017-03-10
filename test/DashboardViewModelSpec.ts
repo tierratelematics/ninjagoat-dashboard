@@ -133,19 +133,6 @@ describe("Given a DashboardViewModel", () => {
                 expect(subject.viewmodels).to.have.length(1);
                 expect(subject.viewmodels[0]).to.be(viewmodel);
             });
-            it("should dispose the subscription", () => {
-                let source = new Subject<any>();
-                viewmodelFactory.setup(v => v.create(It.isAny(), It.isAny(), It.isAny())).returns(() => {
-                    let viewmodel = new MockViewModel();
-                    viewmodel.observe(source);
-                    return viewmodel;
-                });
-
-                setWidgets([createWidget("2882082", "test", 0, 0, 0, 0, {city: "test"})]);
-                subject.remove("2882082");
-
-                expect(source.hasObservers()).to.be(false);
-            });
         });
     });
 
@@ -163,7 +150,7 @@ describe("Given a DashboardViewModel", () => {
                 h: 100,
                 x: 0,
                 y: Infinity,
-                configuration: null
+                configuration: {}
             }])), Times.once());
         });
     });
@@ -192,24 +179,6 @@ describe("Given a DashboardViewModel", () => {
             (<MockViewModel<any>>subject.viewmodels[0]).triggerStateChange();
 
             expect(notifications).to.have.length(1);
-        });
-    });
-
-    context("when disposing the viewmodel", () => {
-        let source: Subject<any>;
-        beforeEach(() => {
-            source = new Subject<any>();
-            viewmodelFactory.setup(v => v.create(It.isAny(), It.isAny(), It.isAny())).returns(() => {
-                let viewmodel = new MockViewModel();
-                viewmodel.observe(source);
-                return viewmodel;
-            });
-        });
-        it("should dispose also the viewmodels' subscriptions", () => {
-            setWidgets([createWidget("2882082", "test", 0, 0, 0, 0, {city: "test"})]);
-            subject.dispose();
-
-            expect(source.hasObservers()).to.be(false);
         });
     });
 
