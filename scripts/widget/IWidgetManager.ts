@@ -1,5 +1,7 @@
+import WidgetSize from "./WidgetSize";
+
 interface IWidgetManager {
-    add(name: string);
+    add(name: string, size: WidgetSize);
     remove(id: string);
     configure(id: string);
 }
