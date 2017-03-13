@@ -8,7 +8,7 @@ import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManager";
 import Dashboard from "../scripts/viewmodel/Dashboard";
-import IWidgetProps from "../scripts/widget/IWidgetProps";
+import IWidgetSettings from "../scripts/widget/IWidgetSettings";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
 
 describe("Given a DashboardViewModel", () => {
@@ -64,14 +64,14 @@ describe("Given a DashboardViewModel", () => {
         });
     }
 
-    function setWidgets(widgets: IWidgetProps<any>[]) {
+    function setWidgets(widgets: IWidgetSettings<any>[]) {
         dataSource.onNext(ModelState.Ready({
             name: "test",
             widgets: widgets
         }));
     }
 
-    function createWidget(id = "", name = "", w = 0, h = 0, x = 0, y = 0, configuration = {}): IWidgetProps<any> {
+    function createWidget(id = "", name = "", w = 0, h = 0, x = 0, y = 0, configuration = {}): IWidgetSettings<any> {
         return {
             id: id,
             name: name,
@@ -207,6 +207,7 @@ describe("Given a DashboardViewModel", () => {
                     configuration: {city: "test"}
                 }])), Times.once());
             });
+            it("should reload the widget observable with the new configuration");
         });
     });
 

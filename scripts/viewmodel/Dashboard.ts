@@ -1,8 +1,8 @@
-import IWidgetProps from "../widget/IWidgetProps";
+import IWidgetSettings from "../widget/IWidgetSettings";
 
 type Dashboard = {
     name: string;
-    widgets: IWidgetProps[]
+    widgets: IWidgetSettings[]
 }
 
 export default Dashboard

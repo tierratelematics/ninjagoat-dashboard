@@ -10,12 +10,13 @@ import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
 import {IDashboardEvents, LayoutItem} from "../DashboardEvents";
 import WidgetSize from "../widget/WidgetSize";
 import * as _ from "lodash";
-import IWidgetProps from "../widget/IWidgetProps";
+import IWidgetSettings from "../widget/IWidgetSettings";
+import {Observable} from "rx";
 
 @ViewModel("Dashboard")
 class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
 
-    private settings: IWidgetProps<any>[] = [];
+    private settings: IWidgetSettings<any>[] = [];
     viewmodels: IViewModel<any>[] = [];
     widgets: IWidgetEntry<any>[] = [];
     breakpoint: string;
@@ -90,7 +91,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         this.saveSettings(this.settings);
     }
 
-    private saveSettings(settings: IWidgetProps<any>[]) {
+    private saveSettings(settings: IWidgetSettings<any>[]) {
         this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, settings);
     }
 

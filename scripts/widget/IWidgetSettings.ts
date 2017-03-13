@@ -1,4 +1,4 @@
-interface IWidgetProps<T> {
+interface IWidgetSettings<T> {
     id: string;
     name: string;
     w: number;
@@ -8,4 +8,4 @@ interface IWidgetProps<T> {
     configuration: T;
 }
 
-export default IWidgetProps
+export default IWidgetSettings
