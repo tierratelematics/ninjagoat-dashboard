@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import expect = require("expect.js");
 import * as TypeMoq from "typemoq";
-import ReactiveSettingsManager from "../scripts/settings/ReactiveSettingsManager";
 import {ISettingsManager, ISettingsManagerAsync} from "ninjagoat";
+import {ReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
 const anyValue = TypeMoq.It.isAny();
 
 describe("Given a ReactiveSettingsManager", () => {

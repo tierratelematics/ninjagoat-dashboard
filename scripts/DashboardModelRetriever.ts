@@ -2,9 +2,9 @@ import {IModelRetriever, ModelState} from "ninjagoat-projections";
 import {ViewModelContext} from "ninjagoat";
 import {Observable} from "rx";
 import {inject, injectable} from "inversify";
-import IReactiveSettingsManager from "./settings/IReactiveSettingsManager";
-import Dashboard from "./viewmodel/Dashboard";
 import IWidgetSettings from "./widget/IWidgetSettings";
+import {IReactiveSettingsManager} from "./ReactiveSettingsManager";
+import {Dashboard} from "./DashboardViewModel";
 
 @injectable()
 class DashboardModelRetriever implements IModelRetriever {

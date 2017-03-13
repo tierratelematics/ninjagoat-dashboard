@@ -2,9 +2,9 @@ import "reflect-metadata";
 import expect = require("expect.js");
 import {Mock, IMock, It, Times} from "typemoq";
 import DashboardModelRetriever from "../scripts/DashboardModelRetriever";
-import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManager";
 import {ViewModelContext} from "ninjagoat";
 import IWidgetSettings from "../scripts/widget/IWidgetSettings";
+import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
 
 describe("Given DashboardModelRetriever", () => {
     let subject: DashboardModelRetriever;
@@ -12,7 +12,8 @@ describe("Given DashboardModelRetriever", () => {
     let widget: IWidgetSettings<any> = {
         id: "",
         name: "",
-        size: "SMALL",
+        w: 0,
+        h: 0,
         x: 0,
         y: 0,
         configuration: null

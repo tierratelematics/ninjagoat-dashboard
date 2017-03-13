@@ -1,14 +1,14 @@
 import "reflect-metadata";
 import expect = require("expect.js");
 import {Mock, IMock, Times, It} from "typemoq";
-import {DashboardViewModel, Dashboard} from "../scripts/viewmodel/DashboardViewModel";
+import {DashboardViewModel, Dashboard} from "../scripts/DashboardViewModel";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
-import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManager";
 import IWidgetSettings from "../scripts/widget/IWidgetSettings";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
+import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;

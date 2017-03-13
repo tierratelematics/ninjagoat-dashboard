@@ -1,10 +1,13 @@
-import IReactiveSettingsManager from "./IReactiveSettingsManager";
 import {Observable, Subject} from "rx";
 import {injectable, inject} from "inversify";
 import {ISettingsManager, ISettingsManagerAsync} from "ninjagoat";
 
+export interface IReactiveSettingsManager extends ISettingsManager, ISettingsManagerAsync {
+    changes<T>(key: string):Observable<T>;
+}
+
 @injectable()
-class ReactiveSettingsManager implements IReactiveSettingsManager {
+export class ReactiveSettingsManager implements IReactiveSettingsManager {
 
     private changesSubject = new Subject<[string, any]>();
 
@@ -35,5 +38,3 @@ class ReactiveSettingsManager implements IReactiveSettingsManager {
     }
 
 }
-
-export default ReactiveSettingsManager
