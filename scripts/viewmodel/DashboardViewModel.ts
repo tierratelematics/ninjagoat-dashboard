@@ -140,6 +140,12 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         let viewmodel = <any>widgetData[1];
         if (viewmodel.configure) {
             widgetData[0].configuration = await viewmodel.configure();
+            //Load new observable
+            if (viewmodel.subscription) viewmodel.subscription.dispose();
+            let widgetEntry = _.find(this.registeredWidgets, widget => widget.name === widgetData[0].name);
+            let viewmodelConstructor = widgetEntry.construct;
+            let viewmodelId = this.getViewModelId(this.constructor) + ":" + this.getViewModelId(viewmodelConstructor);
+            widgetEntry.observable(new ViewModelContext(this.getDashboardArea(), viewmodelId, widgetData[0].configuration));
             this.saveSettings();
         }
     }

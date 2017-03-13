@@ -174,7 +174,7 @@ describe("Given a DashboardViewModel", () => {
 
     context("when a new configuration is applied to a widget", () => {
         context("and a widget has no configuration method", () => {
-            it("should not be saved", async () => {
+            it("should not be saved", async() => {
                 setWidgets([createWidget("2882082", "test")]);
                 await subject.configure("2882082");
 
@@ -183,7 +183,7 @@ describe("Given a DashboardViewModel", () => {
         });
 
         context("and a widget has a configuration method", () => {
-            it("should be saved", async () => {
+            it("should be saved", async() => {
                 setWidgets([createWidget("9292382", "configurable")]);
                 await subject.configure("9292382");
 
@@ -197,7 +197,6 @@ describe("Given a DashboardViewModel", () => {
                     configuration: {city: "test"}
                 }])), Times.once());
             });
-            it("should reload the widget observable with the new configuration");
         });
     });
 

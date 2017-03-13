@@ -13,7 +13,7 @@ class DashboardView extends View<DashboardViewModel> {
                                           className="layout"
                                           cols={vm.config.columns}
                                           rowHeight={vm.config.rowHeight}>
-            
+
         </ResponsiveReactGridLayout>
     }
 
