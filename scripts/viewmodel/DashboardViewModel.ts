@@ -59,6 +59,8 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     private constructViewModels(settings: IWidgetSettings<any>[]) {
         this.widgets = _.map<IWidgetSettings<any>, WidgetData>(settings, setting => {
+            let widgetData = _.find(this.widgets, widget => widget[0].id === setting.id);
+            if (widgetData) return widgetData;
             let widgetEntry = _.find(this.registeredWidgets, widget => widget.name === setting.name);
             let viewmodelConstructor = widgetEntry.construct;
             let viewmodelId = this.getViewModelId(this.constructor) + ":" + this.getViewModelId(viewmodelConstructor);

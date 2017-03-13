@@ -118,7 +118,7 @@ describe("Given a DashboardViewModel", () => {
                 let viewmodel = subject.widgets[0][1];
                 setWidgets([createWidget("2882082", "test"), createWidget("9292382", "test")]);
 
-                expect(subject.widgets[0]).to.be(viewmodel);
+                expect(subject.widgets[0][1]).to.be(viewmodel);
                 viewmodelFactory.verify(v => v.create(It.isAny(), It.isAny(), It.isAny()), Times.exactly(2));
             });
         });
