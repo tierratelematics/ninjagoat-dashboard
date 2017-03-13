@@ -8,6 +8,7 @@
     "inversify": "~3.0.0-rc.2",
     "lodash": "~4.10.0",
     "ninjagoat-projections": "~1.0.0",
+    "react-grid-layout": "~0.14.4",
     "reflect-metadata": "~0.1.3",
     "rx": "~4.1.0"
   },

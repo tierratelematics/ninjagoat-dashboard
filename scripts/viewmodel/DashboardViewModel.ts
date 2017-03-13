@@ -12,7 +12,7 @@ import * as _ from "lodash";
 import IWidgetSettings from "../widget/IWidgetSettings";
 import {Observable, IDisposable} from "rx";
 
-export type WidgetData = [IWidgetSettings<any>, IViewModel<any>];
+export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
 
 export type Dashboard = {
     name: string;
@@ -22,8 +22,9 @@ export type Dashboard = {
 @ViewModel("Dashboard")
 export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
 
-    widgets: WidgetData[] = [];
+    widgets: WidgetItem[] = [];
     registeredWidgets: IWidgetEntry<any>[] = [];
+    config: IDashboardConfig;
     breakpoint: string;
     cols: number;
     dashboardName: string = "";
@@ -37,9 +38,10 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
                 @inject("IReactiveSettingsManager") private settingsManager: IReactiveSettingsManager,
                 @inject("IGUIDGenerator") private guidGenerator: IGUIDGenerator,
                 @inject("IViewModelRegistry") private registry: IViewModelRegistry,
-                @inject("IDashboardConfig") private config: IDashboardConfig = new DefaultDashboardConfig()) {
+                @inject("IDashboardConfig") config: IDashboardConfig = new DefaultDashboardConfig()) {
         super();
         this.registeredWidgets = widgets;
+        this.config = config;
     }
 
     protected onData(data: ModelState<Dashboard>): void {
@@ -58,7 +60,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     }
 
     private constructViewModels(settings: IWidgetSettings<any>[]) {
-        this.widgets = _.map<IWidgetSettings<any>, WidgetData>(settings, setting => {
+        this.widgets = _.map<IWidgetSettings<any>, WidgetItem>(settings, setting => {
             let widgetData = _.find(this.widgets, widget => widget[0].id === setting.id);
             if (widgetData) return widgetData;
             let widgetEntry = _.find(this.registeredWidgets, widget => widget.name === setting.name);
