@@ -78,7 +78,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
     }
 
     add(name: string, size: WidgetSize) {
-        this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, _.union(this.settings, [{
+        this.saveSettings(_.union(this.settings, [{
             id: this.guidGenerator.generate(),
             name: name,
             w: this.config.sizes[size].width,
@@ -89,7 +89,13 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         }]));
     }
 
+    private saveSettings(settings: IWidgetProps<any>[]) {
+        this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, settings);
+    }
+
     remove(id: string) {
+        _.remove(this.settings, setting => setting.id === id);
+        this.saveSettings(this.settings);
     }
 
     configure(id: string) {
