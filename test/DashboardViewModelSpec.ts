@@ -1,13 +1,12 @@
 import "reflect-metadata";
 import expect = require("expect.js");
 import {Mock, IMock, Times, It} from "typemoq";
-import DashboardViewModel from "../scripts/viewmodel/DashboardViewModel";
+import {DashboardViewModel, Dashboard} from "../scripts/viewmodel/DashboardViewModel";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import IReactiveSettingsManager from "../scripts/settings/IReactiveSettingsManager";
-import Dashboard from "../scripts/viewmodel/Dashboard";
 import IWidgetSettings from "../scripts/widget/IWidgetSettings";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
 
@@ -85,8 +84,8 @@ describe("Given a DashboardViewModel", () => {
 
     context("on startup", () => {
         it("should expose the registered widgets", () => {
-            expect(subject.widgets[0].construct).to.be(MockViewModel);
-            expect(subject.widgets[1].construct).to.be(ConfigurableViewModel);
+            expect(subject.registeredWidgets[0].construct).to.be(MockViewModel);
+            expect(subject.registeredWidgets[1].construct).to.be(ConfigurableViewModel);
         });
     });
 
@@ -96,7 +95,7 @@ describe("Given a DashboardViewModel", () => {
             it("should not construct anything", () => {
                 setWidgets([]);
 
-                expect(subject.viewmodels).to.have.length(0);
+                expect(subject.widgets).to.have.length(0);
             });
         });
 
@@ -104,8 +103,8 @@ describe("Given a DashboardViewModel", () => {
             it("should construct the new viewmodel", () => {
                 setWidgets([createWidget("2882082", "test"), createWidget("9292382", "test")]);
 
-                expect(subject.viewmodels[0] instanceof MockViewModel).to.be(true);
-                expect(subject.viewmodels[1] instanceof MockViewModel).to.be(true);
+                expect(subject.widgets[0][1] instanceof MockViewModel).to.be(true);
+                expect(subject.widgets[1][1] instanceof MockViewModel).to.be(true);
             });
             it("should create the observable using the right name and configuration", () => {
                 setWidgets([createWidget("2882082", "test", 0, 0, 0, 0, {city: "test"})]);
@@ -116,22 +115,11 @@ describe("Given a DashboardViewModel", () => {
             });
             it("should leave the other viewmodels untouched", () => {
                 setWidgets([createWidget("2882082", "test")]);
-                let viewmodel = subject.viewmodels[0];
+                let viewmodel = subject.widgets[0][1];
                 setWidgets([createWidget("2882082", "test"), createWidget("9292382", "test")]);
 
-                expect(subject.viewmodels[0]).to.be(viewmodel);
+                expect(subject.widgets[0]).to.be(viewmodel);
                 viewmodelFactory.verify(v => v.create(It.isAny(), It.isAny(), It.isAny()), Times.exactly(2));
-            });
-        });
-
-        context("and a widget is removed", () => {
-            it("should remove it from the list of viewmodels", () => {
-                setWidgets([createWidget("2882082", "test"), createWidget("9292382", "test")]);
-                let viewmodel = subject.viewmodels[0];
-                setWidgets([createWidget("2882082", "test")]);
-
-                expect(subject.viewmodels).to.have.length(1);
-                expect(subject.viewmodels[0]).to.be(viewmodel);
             });
         });
     });
@@ -164,9 +152,11 @@ describe("Given a DashboardViewModel", () => {
                 h: 0,
                 x: 0,
                 y: 0,
-                configuration: null
+                configuration: {}
             }]);
             subject.remove("unique-id");
+
+            expect(subject.widgets).to.have.length(0);
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([])), Times.once());
         });
     });
@@ -176,7 +166,7 @@ describe("Given a DashboardViewModel", () => {
             let notifications = [];
             setWidgets([createWidget("2882082", "test", 0, 0, 0, 0, {city: "test"})]);
             subject.subscribe(change => notifications.push(change));
-            (<MockViewModel<any>>subject.viewmodels[0]).triggerStateChange();
+            (<MockViewModel<any>>subject.widgets[0][1]).triggerStateChange();
 
             expect(notifications).to.have.length(1);
         });

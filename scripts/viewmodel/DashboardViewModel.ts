@@ -5,26 +5,32 @@ import {ModelState, ModelPhase} from "ninjagoat-projections";
 import IWidgetEntry from "../widget/IWidgetEntry";
 import {IViewModelFactory, IViewModelRegistry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import IReactiveSettingsManager from "../settings/IReactiveSettingsManager";
-import Dashboard from "./Dashboard";
 import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
 import {IDashboardEvents, LayoutItem} from "../DashboardEvents";
 import WidgetSize from "../widget/WidgetSize";
 import * as _ from "lodash";
 import IWidgetSettings from "../widget/IWidgetSettings";
-import {Observable} from "rx";
+import {Observable, IDisposable} from "rx";
+
+export type WidgetData = [IWidgetSettings<any>, IViewModel<any>];
+
+export type Dashboard = {
+    name: string;
+    widgets: IWidgetSettings<any>[]
+};
 
 @ViewModel("Dashboard")
-class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
+export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
 
-    private settings: IWidgetSettings<any>[] = [];
-    viewmodels: IViewModel<any>[] = [];
-    widgets: IWidgetEntry<any>[] = [];
+    widgets: WidgetData[] = [];
+    registeredWidgets: IWidgetEntry<any>[] = [];
     breakpoint: string;
     cols: number;
     dashboardName: string = "";
     loading = false;
     failure: Error = null;
     private area = "";
+    private viewmodelsSubscription: IDisposable;
 
     constructor(@multiInject("IWidgetEntry") widgets: IWidgetEntry<any>[],
                 @inject("IViewModelFactory") private viewmodelFactory: IViewModelFactory,
@@ -33,7 +39,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
                 @inject("IViewModelRegistry") private registry: IViewModelRegistry,
                 @inject("IDashboardConfig") private config: IDashboardConfig = new DefaultDashboardConfig()) {
         super();
-        this.widgets = widgets;
+        this.registeredWidgets = widgets;
     }
 
     protected onData(data: ModelState<Dashboard>): void {
@@ -51,17 +57,16 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         }
     }
 
-    private constructViewModels(props: IWidgetSettings<any>[]) {
-        this.settings = props;
-        this.viewmodels = _.map<IWidgetSettings<any>, IViewModel<any>>(props, prop => {
-            let widgetEntry = _.find(this.widgets, widget => widget.name === prop.name);
+    private constructViewModels(settings: IWidgetSettings<any>[]) {
+        this.widgets = _.map<IWidgetSettings<any>, WidgetData>(settings, setting => {
+            let widgetEntry = _.find(this.registeredWidgets, widget => widget.name === setting.name);
             let viewmodelConstructor = widgetEntry.construct;
             let viewmodelId = this.getViewModelId(this.constructor) + ":" + this.getViewModelId(viewmodelConstructor);
-            return this.viewmodelFactory.create(
-                new ViewModelContext(this.getDashboardArea(), viewmodelId, prop.configuration),
-                viewmodelConstructor, widgetEntry.observable);
+            return [setting, this.viewmodelFactory.create(
+                new ViewModelContext(this.getDashboardArea(), viewmodelId, setting.configuration),
+                viewmodelConstructor, widgetEntry.observable)];
         });
-        Observable.merge(this.viewmodels).subscribe(change => this.refreshView());
+        this.subscribeToViewModelsChanges();
     }
 
     private getViewModelId(viewmodel: Function): string {
@@ -84,8 +89,22 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
 
     }
 
+    private subscribeToViewModelsChanges() {
+        if (this.viewmodelsSubscription)
+            this.viewmodelsSubscription.dispose();
+        this.viewmodelsSubscription = Observable.merge(this.getViewModels()).subscribe(change => this.refreshView());
+    }
+
+    private getViewModels(): IViewModel<any>[] {
+        return _.map(this.widgets, widget => widget[1]);
+    }
+
+    private getSettings(): IWidgetSettings<any>[] {
+        return _.map(this.widgets, widget => widget[0]);
+    }
+
     add(name: string, size: WidgetSize) {
-        this.settings = _.union(this.settings, [{
+        this.widgets.push([{
             id: this.guidGenerator.generate(),
             name: name,
             w: this.config.sizes[size].width,
@@ -93,43 +112,49 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
             x: 0,
             y: Infinity,
             configuration: {}
-        }]);
-        this.saveSettings(this.settings);
+        }, null]);
+        this.saveSettings();
     }
 
-    private saveSettings(settings: IWidgetSettings<any>[]) {
-        this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, settings);
+    private saveSettings() {
+        this.settingsManager.setValueAsync(`ninjagoat.dashboard:${this.dashboardName}`, this.getSettings());
     }
 
     remove(id: string) {
-        _.remove(this.settings, setting => setting.id === id);
-        this.saveSettings(this.settings);
+        _.remove(this.widgets, widget => {
+            if (widget[0].id === id) {
+                widget[1].dispose();
+                return true;
+            }
+            return false;
+        });
+        this.saveSettings();
     }
 
     async configure(id: string) {
-        let widgetIndex = _.findIndex(this.settings, setting => setting.id === id);
-        let setting = this.settings[widgetIndex];
-        let viewmodel = <any>this.viewmodels[widgetIndex];
+        let widgetData = _.find(this.widgets, widget => widget[0].id === id);
+        let viewmodel = <any>widgetData[1];
         if (viewmodel.configure) {
-            setting.configuration = await viewmodel.configure();
-            this.saveSettings(this.settings);
+            widgetData[0].configuration = await viewmodel.configure();
+            this.saveSettings();
         }
     }
 
     dispose() {
         super.dispose();
-        //Dispose viewmodels
+        if (this.viewmodelsSubscription)
+            this.viewmodelsSubscription.dispose();
     }
 
     layoutChange(layout: LayoutItem[]) {
         _.forEach(layout, item => {
-            let setting = _.find(this.settings, set => set.id === item.i);
+            let setting = _.find(this.widgets, widget => widget[0].id === item.i)[0];
             setting.w = item.w;
             setting.h = item.h;
             setting.x = item.x;
             setting.y = item.y;
         });
-        this.saveSettings(this.settings);
+        this.saveSettings();
     }
 
     @Refresh
@@ -138,5 +163,3 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         this.cols = cols;
     }
 }
-
-export default DashboardViewModel
