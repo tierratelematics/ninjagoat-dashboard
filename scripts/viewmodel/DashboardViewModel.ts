@@ -1,4 +1,4 @@
-import {ObservableViewModel, IViewModel, ViewModel} from "ninjagoat";
+import {ObservableViewModel, IViewModel, ViewModel, Refresh} from "ninjagoat";
 import {inject, multiInject} from "inversify";
 import IWidgetManager from "../widget/IWidgetManager";
 import {ModelState, ModelPhase} from "ninjagoat-projections";
@@ -78,7 +78,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
     }
 
     add(name: string, size: WidgetSize) {
-        this.saveSettings(_.union(this.settings, [{
+        this.settings = _.union(this.settings, [{
             id: this.guidGenerator.generate(),
             name: name,
             w: this.config.sizes[size].width,
@@ -86,7 +86,8 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
             x: 0,
             y: Infinity,
             configuration: {}
-        }]));
+        }])
+        this.saveSettings(this.settings);
     }
 
     private saveSettings(settings: IWidgetProps<any>[]) {
@@ -108,10 +109,20 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
     }
 
     layoutChange(layout: LayoutItem[]) {
-
+        _.forEach(layout, item => {
+            let setting = _.find(this.settings, set => set.id === item.i);
+            setting.w = item.w;
+            setting.h = item.h;
+            setting.x = item.x;
+            setting.y = item.y;
+        });
+        this.saveSettings(this.settings);
     }
 
+    @Refresh
     breakpointChange(breakpoint: string, cols: number) {
+        this.breakpoint = breakpoint;
+        this.cols = cols;
     }
 }
 
