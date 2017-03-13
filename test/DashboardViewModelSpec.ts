@@ -183,30 +183,21 @@ describe("Given a DashboardViewModel", () => {
     });
 
     context("when a new configuration is applied to a widget", () => {
-        beforeEach(() => {
-            setWidgets([createWidget("2882082", "test"), createWidget("9292382", "configurable")]);
-        });
         context("and a widget has no configuration method", () => {
-            it("should not be saved", () => {
-                subject.configure("2882082");
+            it("should not be saved", async () => {
+                setWidgets([createWidget("2882082", "test")]);
+                await subject.configure("2882082");
 
                 settingsManager.verify(s => s.setValueAsync(It.isAny(), It.isAny()), Times.never());
             });
         });
 
         context("and a widget has a configuration method", () => {
-            it("should be saved", () => {
-                subject.configure("2882082");
+            it("should be saved", async () => {
+                setWidgets([createWidget("9292382", "configurable")]);
+                await subject.configure("9292382");
 
-                settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
-                    id: "2882082",
-                    name: "test",
-                    w: 0,
-                    h: 0,
-                    x: 0,
-                    y: 0,
-                    configuration: {}
-                }, {
+                settingsManager.verify(s => s.setValueAsync(It.isAny(), It.isValue([{
                     id: "9292382",
                     name: "configurable",
                     w: 0,

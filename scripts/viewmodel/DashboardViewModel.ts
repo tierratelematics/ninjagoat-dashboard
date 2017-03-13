@@ -15,7 +15,7 @@ import IWidgetProps from "../widget/IWidgetProps";
 @ViewModel("Dashboard")
 class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
 
-    settings: IWidgetProps<any>[] = [];
+    private settings: IWidgetProps<any>[] = [];
     viewmodels: IViewModel<any>[] = [];
     widgets: IWidgetEntry<any>[] = [];
     breakpoint: string;
@@ -86,7 +86,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
             x: 0,
             y: Infinity,
             configuration: {}
-        }])
+        }]);
         this.saveSettings(this.settings);
     }
 
@@ -99,8 +99,14 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         this.saveSettings(this.settings);
     }
 
-    configure(id: string) {
-
+    async configure(id: string) {
+        let widgetIndex = _.findIndex(this.settings, setting => setting.id === id);
+        let widget = this.settings[widgetIndex];
+        let viewmodel = <any>this.viewmodels[widgetIndex];
+        if (viewmodel.configure) {
+            widget.configuration = await viewmodel.configure();
+            this.saveSettings(this.settings);
+        }
     }
 
     dispose() {
