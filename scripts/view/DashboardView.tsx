@@ -1,22 +1,23 @@
 import * as React from "react";
-import {View} from "ninjagoat";
-import {DashboardViewModel} from "../viewmodel/DashboardViewModel";
+import {WidgetItem} from "../viewmodel/DashboardViewModel";
+import {IDashboardConfig} from "../DashboardConfig";
+import {IDashboardEvents} from "../DashboardEvents";
 const WidthProvider = require('react-grid-layout').WidthProvider;
 let ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 ResponsiveReactGridLayout = WidthProvider(ResponsiveReactGridLayout);
 
-class DashboardView extends View<DashboardViewModel> {
-    render() {
-        let vm = this.props.viewmodel;
-        return <ResponsiveReactGridLayout onLayoutChange={vm.layoutChange.bind(vm)}
-                                          onBreakpointChange={vm.breakpointChange.bind(vm)}
-                                          className="layout"
-                                          cols={vm.config.columns}
-                                          rowHeight={vm.config.rowHeight}>
+const DashboardView = ({widgets, config, events}  = {
+    widgets: WidgetItem,
+    config: IDashboardConfig,
+    events: IDashboardEvents
+}) => {
+    return <ResponsiveReactGridLayout onLayoutChange={events.layoutChange.bind(events)}
+                                      onBreakpointChange={events.breakpointChange.bind(events)}
+                                      className="layout"
+                                      cols={config.columns}
+                                      rowHeight={config.rowHeight}>
 
-        </ResponsiveReactGridLayout>
-    }
-
-}
+    </ResponsiveReactGridLayout>;
+};
 
 export default DashboardView
