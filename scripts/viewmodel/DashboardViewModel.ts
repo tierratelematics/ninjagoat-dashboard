@@ -51,9 +51,9 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
         }
     }
 
-    private constructViewModels(props: IWidgetProps<any>[]) {
+    private constructViewModels(props: IWidgetSettings<any>[]) {
         this.settings = props;
-        this.viewmodels = _.map<IWidgetProps<any>, IViewModel<any>>(props, prop => {
+        this.viewmodels = _.map<IWidgetSettings<any>, IViewModel<any>>(props, prop => {
             let widgetEntry = _.find(this.widgets, widget => widget.name === prop.name);
             let viewmodelConstructor = widgetEntry.construct;
             let viewmodelId = this.getViewModelId(this.constructor) + ":" + this.getViewModelId(viewmodelConstructor);
@@ -61,6 +61,7 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
                 new ViewModelContext(this.getDashboardArea(), viewmodelId, prop.configuration),
                 viewmodelConstructor, widgetEntry.observable);
         });
+        Observable.merge(this.viewmodels).subscribe(change => this.refreshView());
     }
 
     private getViewModelId(viewmodel: Function): string {
@@ -76,6 +77,11 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
             if (entry) area = areaRegistry.area;
         });
         return area;
+    }
+
+    @Refresh
+    private refreshView() {
+
     }
 
     add(name: string, size: WidgetSize) {
@@ -102,10 +108,10 @@ class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> impl
 
     async configure(id: string) {
         let widgetIndex = _.findIndex(this.settings, setting => setting.id === id);
-        let widget = this.settings[widgetIndex];
+        let setting = this.settings[widgetIndex];
         let viewmodel = <any>this.viewmodels[widgetIndex];
         if (viewmodel.configure) {
-            widget.configuration = await viewmodel.configure();
+            setting.configuration = await viewmodel.configure();
             this.saveSettings(this.settings);
         }
     }
