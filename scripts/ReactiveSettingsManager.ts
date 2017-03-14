@@ -11,8 +11,8 @@ export class ReactiveSettingsManager implements IReactiveSettingsManager {
 
     private changesSubject = new Subject<[string, any]>();
 
-    constructor(@inject("SettingsManager") private settingsManager: ISettingsManager,
-                @inject("SettingsManager") private settingsManagerAsync: ISettingsManagerAsync) {
+    constructor(@inject("ISettingsManager") private settingsManager: ISettingsManager,
+                @inject("ISettingsManager") private settingsManagerAsync: ISettingsManagerAsync) {
 
     }
 
