@@ -1,5 +1,5 @@
 import {ObservableViewModel, IViewModel, ViewModel, Refresh} from "ninjagoat";
-import {inject, multiInject} from "inversify";
+import {inject, multiInject, optional} from "inversify";
 import {ModelState, ModelPhase} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "./DashboardConfig";
@@ -35,7 +35,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
                 @inject("IReactiveSettingsManager") private settingsManager: IReactiveSettingsManager,
                 @inject("IGUIDGenerator") private guidGenerator: IGUIDGenerator,
                 @inject("IViewModelRegistry") private registry: IViewModelRegistry,
-                @inject("IDashboardConfig") config: IDashboardConfig = new DefaultDashboardConfig()) {
+                @inject("IDashboardConfig") @optional() config: IDashboardConfig = new DefaultDashboardConfig()) {
         super();
         this.registeredWidgets = widgets;
         this.config = config;
@@ -91,7 +91,6 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     @Refresh
     private refreshView() {
-
     }
 
     add(name: string, size: WidgetSize) {
