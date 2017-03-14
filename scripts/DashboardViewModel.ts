@@ -11,13 +11,13 @@ import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize} from "./Widge
 
 export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
 
-export type Dashboard = {
+export type DashboardModel = {
     name: string;
     widgets: IWidgetSettings<any>[]
 };
 
 @ViewModel("Dashboard")
-export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
+export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[] = [];
     registeredWidgets: IWidgetEntry<any>[] = [];
@@ -41,7 +41,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         this.config = config;
     }
 
-    protected onData(data: ModelState<Dashboard>): void {
+    protected onData(data: ModelState<DashboardModel>): void {
         if (data.phase === ModelPhase.Loading) {
             this.loading = true;
         } else {

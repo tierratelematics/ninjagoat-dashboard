@@ -8,14 +8,14 @@ const WidthProvider = require('react-grid-layout').WidthProvider;
 let ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 ResponsiveReactGridLayout = WidthProvider(ResponsiveReactGridLayout);
 
-export type DashboardComponentProps = {
+export type DashboardProps = {
     widgets: WidgetItem[],
     config: IDashboardConfig,
     events: IDashboardEvents,
     templateSelector: WidgetTemplateSelector
 };
 
-export class DashboardComponent extends React.Component<DashboardComponentProps, any> {
+export class Dashboard extends React.Component<DashboardProps, any> {
 
     render() {
         let {widgets, config, events, templateSelector} = this.props;
@@ -25,12 +25,12 @@ export class DashboardComponent extends React.Component<DashboardComponentProps,
                                           cols={config.columns}
                                           rowHeight={config.rowHeight}>
             {_.map(widgets, widget => <div key={widget[0].id} data-grid={{
-            i: widget[0].id,
-            w: widget[0].w,
-            h: widget[0].h,
-            x: widget[0].x,
-            y: widget[0].y
-        }}>
+                i: widget[0].id,
+                w: widget[0].w,
+                h: widget[0].h,
+                x: widget[0].x,
+                y: widget[0].y
+            }}>
                 {templateSelector(widget)}
             </div>)}
         </ResponsiveReactGridLayout>;

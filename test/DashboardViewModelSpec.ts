@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import expect = require("expect.js");
 import {Mock, IMock, Times, It} from "typemoq";
-import {DashboardViewModel, Dashboard} from "../scripts/DashboardViewModel";
+import {DashboardViewModel, DashboardModel} from "../scripts/DashboardViewModel";
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
@@ -15,13 +15,13 @@ describe("Given a DashboardViewModel", () => {
     let viewmodelFactory: IMock<IViewModelFactory>;
     let settingsManager: IMock<IReactiveSettingsManager>;
     let guidGenerator: IMock<IGUIDGenerator>;
-    let dataSource: Subject<ModelState<Dashboard>>;
+    let dataSource: Subject<ModelState<DashboardModel>>;
     let registry: IMock<IViewModelRegistry>;
     let testSource: Subject<any>;
     let configurableSource: Subject<any>;
 
     beforeEach(() => {
-        dataSource = new Subject<ModelState<Dashboard>>();
+        dataSource = new Subject<ModelState<DashboardModel>>();
         settingsManager = Mock.ofType<IReactiveSettingsManager>();
         viewmodelFactory = Mock.ofType<IViewModelFactory>();
         guidGenerator = Mock.ofType<IGUIDGenerator>();

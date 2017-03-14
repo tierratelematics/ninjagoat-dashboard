@@ -41,12 +41,12 @@ export class ReactiveSettingsManager implements IReactiveSettingsManager {
 
 export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
 
-export type Dashboard = {
+export type DashboardModel = {
     name: string;
     widgets: IWidgetSettings<any>[]
 };
 
-export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard>> implements IWidgetManager, IDashboardEvents {
+export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[];
     registeredWidgets: IWidgetEntry<any>[];
@@ -60,7 +60,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     constructor(widgets: IWidgetEntry<any>[], viewmodelFactory: IViewModelFactory, settingsManager: IReactiveSettingsManager,
                 guidGenerator: IGUIDGenerator, registry: IViewModelRegistry, config: IDashboardConfig);
 
-    protected onData(data: ModelState<Dashboard>): void;
+    protected onData(data: ModelState<DashboardModel>): void;
 
     add(name: string, size: WidgetSize);
 
@@ -76,7 +76,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 }
 
 export class DashboardModelRetriever implements IModelRetriever {
-    modelFor(context: ViewModelContext): Observable<ModelState<Dashboard>>;
+    modelFor(context: ViewModelContext): Observable<ModelState<DashboardModel>>;
 }
 
 export interface IDashboardEvents {
@@ -151,11 +151,11 @@ export interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;
 }
 
-export class DashboardComponent extends Component<DashboardComponentProps, any> {
+export class Dashboard extends Component<DashboardProps, any> {
     render();
 }
 
-export type DashboardComponentProps = {
+export type DashboardProps = {
     widgets: WidgetItem[],
     config: IDashboardConfig,
     events: IDashboardEvents,
