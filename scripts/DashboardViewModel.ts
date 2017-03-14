@@ -115,13 +115,9 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     }
 
     remove(id: string) {
-        _.remove(this.widgets, widget => {
-            if (widget[0].id === id) {
-                widget[1].dispose();
-                return true;
-            }
-            return false;
-        });
+        let viewmodel: any = _.remove(this.widgets, widget => widget[0].id === id)[0][1];
+        if (viewmodel.dispose)
+            viewmodel.dispose();
         this.saveSettings();
     }
 
