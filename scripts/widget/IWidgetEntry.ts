@@ -1,5 +1,5 @@
 import {interfaces} from "inversify";
-import {IViewModel} from "ninjagoat";
+import {IViewModel, ViewModelContext} from "ninjagoat";
 import {IObservable} from "rx";
 import IWidgetMetadata from "./IWidgetMetadata";
 import WidgetSize from "./WidgetSize";
