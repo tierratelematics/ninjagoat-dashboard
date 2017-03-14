@@ -100,7 +100,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
             w: this.config.sizes[size].width,
             h: this.config.sizes[size].height,
             x: 0,
-            y: Infinity,
+            y: Number.MAX_VALUE,
             configuration: {}
         }, null]);
         this.saveSettings();

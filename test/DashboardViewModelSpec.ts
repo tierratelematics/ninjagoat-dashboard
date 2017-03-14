@@ -137,7 +137,7 @@ describe("Given a DashboardViewModel", () => {
                 w: 100,
                 h: 100,
                 x: 0,
-                y: Infinity,
+                y: Number.MAX_VALUE,
                 configuration: {}
             }])), Times.once());
         });
