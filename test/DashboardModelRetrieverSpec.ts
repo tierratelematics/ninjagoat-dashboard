@@ -3,8 +3,8 @@ import expect = require("expect.js");
 import {Mock, IMock, It, Times} from "typemoq";
 import DashboardModelRetriever from "../scripts/DashboardModelRetriever";
 import {ViewModelContext} from "ninjagoat";
-import IWidgetSettings from "../scripts/widget/IWidgetSettings";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
+import {IWidgetSettings} from "../scripts/WidgetComponents";
 
 describe("Given DashboardModelRetriever", () => {
     let subject: DashboardModelRetriever;

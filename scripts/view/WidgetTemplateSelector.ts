@@ -1,8 +1,8 @@
 import {WidgetItem} from "../DashboardViewModel";
 import {ReactElement} from "react";
 
-interface IWidgetTemplateSelector {
+interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;
 }
 
-export default IWidgetTemplateSelector
+export default WidgetTemplateSelector

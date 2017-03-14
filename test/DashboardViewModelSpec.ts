@@ -6,9 +6,9 @@ import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
-import IWidgetSettings from "../scripts/widget/IWidgetSettings";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
+import {IWidgetSettings} from "../scripts/WidgetComponents";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;

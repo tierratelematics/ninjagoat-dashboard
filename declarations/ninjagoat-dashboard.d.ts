@@ -147,7 +147,7 @@ export interface IWidgetSettings<T> {
 
 export type WidgetSize = "SMALL" | "MEDIUM" | "LARGE";
 
-export interface IWidgetTemplateSelector {
+export interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;
 }
 
@@ -159,5 +159,5 @@ export type DashboardViewProps = {
     widgets: WidgetItem[],
     config: IDashboardConfig,
     events: IDashboardEvents,
-    templateSelector: IWidgetTemplateSelector
+    templateSelector: WidgetTemplateSelector
 };

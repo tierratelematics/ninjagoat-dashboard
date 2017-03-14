@@ -2,8 +2,8 @@ import * as React from "react";
 import {WidgetItem} from "../DashboardViewModel";
 import {IDashboardConfig} from "../DashboardConfig";
 import {IDashboardEvents} from "../DashboardEvents";
-import IWidgetTemplateSelector from "./IWidgetTemplateSelector";
 import * as _ from "lodash";
+import WidgetTemplateSelector from "./WidgetTemplateSelector";
 const WidthProvider = require('react-grid-layout').WidthProvider;
 let ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 ResponsiveReactGridLayout = WidthProvider(ResponsiveReactGridLayout);
@@ -12,7 +12,7 @@ export type DashboardViewProps = {
     widgets: WidgetItem[],
     config: IDashboardConfig,
     events: IDashboardEvents,
-    templateSelector: IWidgetTemplateSelector
+    templateSelector: WidgetTemplateSelector
 };
 
 export class DashboardView extends React.Component<DashboardViewProps, any> {

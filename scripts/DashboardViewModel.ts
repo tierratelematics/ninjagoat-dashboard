@@ -1,16 +1,13 @@
 import {ObservableViewModel, IViewModel, ViewModel, Refresh} from "ninjagoat";
 import {inject, multiInject} from "inversify";
-import IWidgetManager from "./widget/IWidgetManager";
 import {ModelState, ModelPhase} from "ninjagoat-projections";
-import IWidgetEntry from "./widget/IWidgetEntry";
 import {IViewModelFactory, IViewModelRegistry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "./DashboardConfig";
 import {IDashboardEvents, LayoutItem} from "./DashboardEvents";
-import WidgetSize from "./widget/WidgetSize";
 import * as _ from "lodash";
-import IWidgetSettings from "./widget/IWidgetSettings";
 import {Observable, IDisposable, IObservable} from "rx";
 import {IReactiveSettingsManager} from "./ReactiveSettingsManager";
+import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize} from "./WidgetComponents";
 
 export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
 

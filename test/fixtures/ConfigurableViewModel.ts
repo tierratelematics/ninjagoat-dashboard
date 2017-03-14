@@ -1,5 +1,5 @@
 import {ObservableViewModel, ViewModel} from "ninjagoat";
-import IConfigurableWidget from "../../scripts/widget/IConfigurableWidget";
+import {IConfigurableWidget} from "../../scripts/WidgetComponents";
 
 @ViewModel("Configurable")
 export default class ConfigurableViewModel<T> extends ObservableViewModel<T> implements IConfigurableWidget<any> {
