@@ -151,11 +151,11 @@ export interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;
 }
 
-export class DashboardView extends Component<DashboardViewProps, any> {
+export class DashboardComponent extends Component<DashboardComponentProps, any> {
     render();
 }
 
-export type DashboardViewProps = {
+export type DashboardComponentProps = {
     widgets: WidgetItem[],
     config: IDashboardConfig,
     events: IDashboardEvents,
