@@ -5,6 +5,7 @@ import DashboardModelRetriever from "../scripts/DashboardModelRetriever";
 import {ViewModelContext} from "ninjagoat";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
 import {IWidgetSettings} from "../scripts/WidgetComponents";
+import {Observable} from "rx";
 
 describe("Given DashboardModelRetriever", () => {
     let subject: DashboardModelRetriever;
@@ -28,6 +29,7 @@ describe("Given DashboardModelRetriever", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:my-dashboard")).returns(() => Promise.resolve<IWidgetSettings<any>[]>([widget]));
         });
         it("should retrieve the specific dashboard model", (done) => {
+            settingsManager.setup(s => s.changes<IWidgetSettings<any>[]>("ninjagoat.dashboard:my-dashboard")).returns(() => Observable.empty<IWidgetSettings<any>[]>());
             subject.modelFor(new ViewModelContext("test", "dashboard", {
                 name: "my-dashboard"
             })).skip(1).subscribe(value => {
@@ -37,12 +39,44 @@ describe("Given DashboardModelRetriever", () => {
                 });
                 done();
             });
+        });
 
+        it("should merge the model with the live changes", (done) => {
+            settingsManager.setup(s => s.changes<IWidgetSettings<any>[]>("ninjagoat.dashboard:my-dashboard")).returns(() => Observable.create<IWidgetSettings<any>[]>(observer => {
+                observer.onNext([{
+                    id: "",
+                    name: "",
+                    w: 100,
+                    h: 0,
+                    x: 0,
+                    y: 0,
+                    configuration: null
+                }]);
+            }));
+
+            subject.modelFor(new ViewModelContext("test", "dashboard", {
+                name: "my-dashboard"
+            })).skip(1).subscribe(value => {
+                expect(value.model).to.eql({
+                    name: "my-dashboard",
+                    widgets: [{
+                        id: "",
+                        name: "",
+                        w: 100,
+                        h: 0,
+                        x: 0,
+                        y: 0,
+                        configuration: null
+                    }]
+                });
+                done();
+            });
         });
     });
 
     context("when a dashboard name is not provided", () => {
         beforeEach(() => {
+            settingsManager.setup(s => s.changes<IWidgetSettings<any>[]>("ninjagoat.dashboard:default")).returns(() => Observable.empty<IWidgetSettings<any>[]>());
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:default")).returns(() => Promise.resolve<IWidgetSettings<any>[]>([widget]));
         });
         it("should retrieve the default model", (done) => {

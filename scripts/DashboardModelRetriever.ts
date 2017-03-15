@@ -17,6 +17,7 @@ class DashboardModelRetriever implements IModelRetriever {
         context.parameters = context.parameters || {};
         let dashboardName = context.parameters.name ? context.parameters.name : "default";
         return Observable.fromPromise(this.settingsManager.getValueAsync<IWidgetSettings<any>[]>(`ninjagoat.dashboard:${dashboardName}`))
+            .merge(this.settingsManager.changes<IWidgetSettings<any>[]>(`ninjagoat.dashboard:${dashboardName}`))
             .map(settings => ModelState.Ready<DashboardModel>({
                 name: dashboardName,
                 widgets: settings
