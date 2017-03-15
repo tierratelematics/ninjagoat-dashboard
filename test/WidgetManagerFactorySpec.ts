@@ -22,10 +22,10 @@ describe("Given a WidgetManagerFactory", () => {
         context("if it was already built", () => {
             let cachedManager: IWidgetManager;
             beforeEach(() => {
-                cachedManager = subject.createFor("test");
+                cachedManager = subject.managerFor("test");
             });
             it("should return the cached one", () => {
-                let manager = subject.createFor("test");
+                let manager = subject.managerFor("test");
 
                 expect(manager).to.be(cachedManager);
             });
@@ -33,9 +33,15 @@ describe("Given a WidgetManagerFactory", () => {
 
         context("if it wasn't already built", () => {
             it("should build it and return it", () => {
-                let manager = subject.createFor("test");
+                let manager = subject.managerFor("test");
 
                 expect(manager).to.be.ok();
+            });
+
+            it("should correctly set the dashboard name", () => {
+                let manager:any = subject.managerFor("test");
+
+                expect(manager.dashboardName).to.be("test");
             });
         });
     });
