@@ -3,11 +3,20 @@ import {IReactiveSettingsManager} from "../ReactiveSettingsManager";
 import {IGUIDGenerator} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
 import * as _ from "lodash";
+import {inject, optional, injectable} from "inversify";
 
+@injectable()
 class WidgetManager implements IWidgetManager {
 
-    constructor(private settingsManager: IReactiveSettingsManager, private guidGenerator: IGUIDGenerator,
-                private dashboardName: string, private config: IDashboardConfig = new DefaultDashboardConfig()) {
+    private dashboardName: string;
+
+    constructor(@inject("IReactiveSettingsManager") private settingsManager: IReactiveSettingsManager,
+                @inject("IGUIDGenerator") private guidGenerator: IGUIDGenerator,
+                @inject("IDashboardConfig") @optional() private config: IDashboardConfig = new DefaultDashboardConfig()) {
+    }
+
+    setDashboardName(dashboardName: string) {
+        this.dashboardName = dashboardName;
     }
 
     async add(name: string, size: WidgetSize) {
