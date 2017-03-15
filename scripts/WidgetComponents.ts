@@ -27,6 +27,8 @@ export interface IWidgetMetadata {
     thumbnail?: string;
 }
 
+export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
+
 export interface IWidgetSettings<T> {
     id: string;
     name: string;

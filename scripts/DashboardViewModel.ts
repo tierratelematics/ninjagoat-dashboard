@@ -7,9 +7,7 @@ import {IDashboardEvents, LayoutItem} from "./DashboardEvents";
 import * as _ from "lodash";
 import {Observable, IDisposable, IObservable} from "rx";
 import {IReactiveSettingsManager} from "./ReactiveSettingsManager";
-import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize} from "./WidgetComponents";
-
-export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
+import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize, WidgetItem} from "./WidgetComponents";
 
 export type DashboardModel = {
     name: string;
