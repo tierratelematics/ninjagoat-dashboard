@@ -4,7 +4,7 @@ import {Observable} from "rx";
 import {inject, injectable} from "inversify";
 import {IReactiveSettingsManager} from "./ReactiveSettingsManager";
 import {DashboardModel} from "./DashboardViewModel";
-import {IWidgetSettings} from "./WidgetComponents";
+import {IWidgetSettings} from "./widget/WidgetComponents";
 
 @injectable()
 class DashboardModelRetriever implements IModelRetriever {

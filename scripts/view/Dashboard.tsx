@@ -3,7 +3,7 @@ import {IDashboardConfig} from "../DashboardConfig";
 import {IDashboardEvents} from "../DashboardEvents";
 import * as _ from "lodash";
 import WidgetTemplateSelector from "./WidgetTemplateSelector";
-import {WidgetItem} from "../WidgetComponents";
+import {WidgetItem} from "../widget/WidgetComponents";
 const WidthProvider = require('react-grid-layout').WidthProvider;
 let ResponsiveReactGridLayout = require('react-grid-layout').Responsive;
 ResponsiveReactGridLayout = WidthProvider(ResponsiveReactGridLayout);

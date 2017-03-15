@@ -17,7 +17,7 @@ export interface IWidgetEntry<T> {
 export interface IWidgetManager {
     add(name: string, size: WidgetSize);
     remove(id: string);
-    configure(id: string);
+    configure(id: string, configuration?: any);
 }
 
 export interface IWidgetMetadata {

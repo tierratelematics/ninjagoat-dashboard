@@ -7,7 +7,7 @@ import {IDashboardEvents, LayoutItem} from "./DashboardEvents";
 import * as _ from "lodash";
 import {Observable, IDisposable, IObservable} from "rx";
 import {IReactiveSettingsManager} from "./ReactiveSettingsManager";
-import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize, WidgetItem} from "./WidgetComponents";
+import {IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize, WidgetItem} from "./widget/WidgetComponents";
 
 export type DashboardModel = {
     name: string;
@@ -18,7 +18,7 @@ export type DashboardModel = {
 export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[] = [];
-    registeredWidgets: IWidgetEntry<any>[] = [];
+    entries: IWidgetEntry<any>[] = [];
     config: IDashboardConfig;
     breakpoint: string;
     cols: number;
@@ -35,7 +35,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
                 @inject("IViewModelRegistry") private registry: IViewModelRegistry,
                 @inject("IDashboardConfig") @optional() config: IDashboardConfig = new DefaultDashboardConfig()) {
         super();
-        this.registeredWidgets = widgets;
+        this.entries = widgets;
         this.config = config;
     }
 
@@ -59,7 +59,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         let widgetItem = _.find(this.widgets, widget => widget[0].id === setting.id);
         if (widgetItem && widgetItem[1])
             return widgetItem;
-        let entry = _.find(this.registeredWidgets, widget => widget.name === setting.name);
+        let entry = _.find(this.entries, widget => widget.name === setting.name);
         let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
         return [setting, this.viewmodelFactory.create(
             new ViewModelContext(this.areaOfDashboard(), viewmodelName, setting.configuration),
@@ -129,7 +129,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     }
 
     private observableForConfiguration(widgetName: string, configuration: any): IObservable<any> {
-        let entry = _.find(this.registeredWidgets, widget => widget.name === widgetName);
+        let entry = _.find(this.entries, widget => widget.name === widgetName);
         let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
         return entry.observable(new ViewModelContext(this.areaOfDashboard(), viewmodelName, configuration));
     }

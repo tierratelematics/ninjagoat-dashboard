@@ -8,7 +8,7 @@ import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
-import {IWidgetSettings} from "../scripts/WidgetComponents";
+import {IWidgetSettings} from "../scripts/widget/WidgetComponents";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;
@@ -84,8 +84,8 @@ describe("Given a DashboardViewModel", () => {
 
     context("on startup", () => {
         it("should expose the registered widgets", () => {
-            expect(subject.registeredWidgets[0].construct).to.be(MockViewModel);
-            expect(subject.registeredWidgets[1].construct).to.be(ConfigurableViewModel);
+            expect(subject.entries[0].construct).to.be(MockViewModel);
+            expect(subject.entries[1].construct).to.be(ConfigurableViewModel);
         });
     });
 
@@ -121,43 +121,6 @@ describe("Given a DashboardViewModel", () => {
                 expect(subject.widgets[0][1]).to.be(viewmodel);
                 viewmodelFactory.verify(v => v.create(It.isAny(), It.isAny(), It.isAny()), Times.exactly(2));
             });
-        });
-    });
-
-    context("when a new widget is added", () => {
-        beforeEach(() => {
-            guidGenerator.setup(u => u.generate()).returns(() => "unique-id");
-        });
-        it("should add it to settings", () => {
-            setWidgets([]);
-            subject.add("test", "SMALL");
-            settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
-                id: "unique-id",
-                name: "test",
-                w: 100,
-                h: 100,
-                x: 0,
-                y: Number.MAX_VALUE,
-                configuration: {}
-            }])), Times.once());
-        });
-    });
-
-    context("when a widget is removed", () => {
-        it("should remove it from settings", () => {
-            setWidgets([{
-                id: "unique-id",
-                name: "test",
-                w: 0,
-                h: 0,
-                x: 0,
-                y: 0,
-                configuration: {}
-            }]);
-            subject.remove("unique-id");
-
-            expect(subject.widgets).to.have.length(0);
-            settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([])), Times.once());
         });
     });
 

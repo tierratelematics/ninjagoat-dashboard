@@ -4,7 +4,7 @@ import {Mock, IMock, It, Times} from "typemoq";
 import DashboardModelRetriever from "../scripts/DashboardModelRetriever";
 import {ViewModelContext} from "ninjagoat";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
-import {IWidgetSettings} from "../scripts/WidgetComponents";
+import {IWidgetSettings} from "../scripts/widget/WidgetComponents";
 import {Observable} from "rx";
 
 describe("Given DashboardModelRetriever", () => {

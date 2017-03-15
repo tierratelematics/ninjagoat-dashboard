@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {WidgetItem} from "../WidgetComponents";
+import {WidgetItem} from "../widget/WidgetComponents";
 
 interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;
