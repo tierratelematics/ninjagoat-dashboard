@@ -22,6 +22,8 @@ export class Dashboard extends React.Component<DashboardProps, any> {
         return <ResponsiveReactGridLayout onLayoutChange={events.layoutChange.bind(events)}
                                           onBreakpointChange={events.breakpointChange.bind(events)}
                                           className="layout"
+                                          isResizable={false}
+                                          draggableHandle={config.draggableHandle}
                                           cols={config.columns}
                                           rowHeight={config.rowHeight}>
             {_.map(widgets, widget => <div key={widget[0].id} data-grid={{
@@ -30,8 +32,6 @@ export class Dashboard extends React.Component<DashboardProps, any> {
                     h: widget[0].h,
                     x: widget[0].x,
                     y: widget[0].y,
-                    isResizable: false,
-                    draggableHandle: config.draggableHandle
                 }}>
                 {templateSelector(widget)}
             </div>)}
