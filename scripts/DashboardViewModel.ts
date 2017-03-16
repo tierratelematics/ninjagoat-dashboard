@@ -51,13 +51,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
                 this.failure = null;
                 this.dashboardName = data.model.name;
                 this.widgetManager = this.widgetManagerFactory.managerFor(this.dashboardName);
-                //Dispose removed widgets
-                _.forEach(this.widgets, item => {
-                    let widgetStillPresent = _.find(data.model.widgets, widget => widget.id === item[0].id);
-                    if (widgetStillPresent) return;
-                    let viewModel: any = item[1];
-                    if (viewModel.dispose) viewModel.dispose();
-                });
+                this.disposeRemovedWidgets(data.model.widgets);
                 this.widgets = _.map(data.model.widgets, widget => this.constructViewModel(widget));
                 this.subscribeToViewModelsChanges();
             } else {
@@ -75,6 +69,15 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         return [setting, this.viewmodelFactory.create(
             new ViewModelContext(this.dashboardArea(), viewmodelName, setting.configuration),
             entry.construct, entry.observable)];
+    }
+
+    private disposeRemovedWidgets(settings: IWidgetSettings<any>[]) {
+        _.forEach(this.widgets, item => {
+            let widgetStillPresent = _.find(settings, setting => setting.id === item[0].id);
+            if (widgetStillPresent) return;
+            let viewModel: any = item[1];
+            if (viewModel.dispose) viewModel.dispose();
+        });
     }
 
     private dashboardArea(): string {
