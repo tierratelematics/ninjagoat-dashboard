@@ -15,4 +15,3 @@ class Card extends React.Component<{title: string}, {}> {
 }
 
 export default Card
-

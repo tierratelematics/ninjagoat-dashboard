@@ -18,8 +18,6 @@ describe("Given a DashboardViewModel", () => {
     let widgetManagerFactory: IMock<IWidgetManagerFactory>;
     let dataSource: Subject<ModelState<DashboardModel>>;
     let registry: IMock<IViewModelRegistry>;
-    let testSource: Subject<any>;
-    let configurableSource: Subject<any>;
 
     beforeEach(() => {
         dataSource = new Subject<ModelState<DashboardModel>>();
@@ -51,21 +49,18 @@ describe("Given a DashboardViewModel", () => {
             }
         ], viewmodelFactory.object, widgetManagerFactory.object, registry.object);
 
-        testSource = new Subject<any>();
-        configurableSource = new Subject<any>();
-
-        configureFactory(MockViewModel, "Mock", {}, testSource);
-        configureFactory(MockViewModel, "Mock", {city: "test"}, testSource);
-        configureFactory(ConfigurableViewModel, "Configurable", {}, configurableSource);
-        configureFactory(ConfigurableViewModel, "Configurable", {city: "test"}, configurableSource);
+        configureFactory(MockViewModel, "Mock", {});
+        configureFactory(MockViewModel, "Mock", {city: "test"});
+        configureFactory(ConfigurableViewModel, "Configurable", {});
+        configureFactory(ConfigurableViewModel, "Configurable", {city: "test"});
 
         subject.observe(dataSource);
     });
 
-    function configureFactory(ViewModel, viewmodelId, configuration, observable) {
+    function configureFactory(ViewModel, viewmodelId, configuration) {
         viewmodelFactory.setup(v => v.create(It.isValue(new ViewModelContext("dashboard", "Dashboard:" + viewmodelId, configuration)), ViewModel, It.isAny())).returns(() => {
             let viewmodel = new ViewModel();
-            viewmodel.observe(observable);
+            viewmodel.observe(Observable.empty<any>());
             return viewmodel;
         });
     }
