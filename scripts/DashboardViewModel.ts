@@ -69,7 +69,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         let viewmodelName = `${ViewModelUtil.getViewModelName(this.constructor)}:${ViewModelUtil.getViewModelName(entry.construct)}`;
         return [setting, this.viewmodelFactory.create(
             new ViewModelContext(this.dashboardArea(), viewmodelName, setting.configuration),
-            entry.construct, entry.observable)];
+            entry.construct, entry.observable), this.entries[setting.name].metadata];
     }
 
     private disposeRemovedWidgets(settings: IWidgetSettings<any>[]) {

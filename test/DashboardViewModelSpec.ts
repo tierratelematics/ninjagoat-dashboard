@@ -39,7 +39,10 @@ describe("Given a DashboardViewModel", () => {
                 construct: MockViewModel,
                 observable: context => Observable.empty(),
                 name: "test",
-                sizes: ["SMALL"]
+                sizes: ["SMALL"],
+                metadata: {
+                    title: "widget test title"
+                }
             }, {
                 construct: ConfigurableViewModel,
                 observable: context => Observable.empty(),
@@ -109,6 +112,11 @@ describe("Given a DashboardViewModel", () => {
 
                 expect(subject.widgets[0][1] instanceof MockViewModel).to.be(true);
                 expect(subject.widgets[1][1] instanceof MockViewModel).to.be(true);
+            });
+            it("should set the widget metadata correctly", () => {
+                setWidgets([createWidget("2882082", "test"), createWidget("9292382", "test")]);
+
+                expect(subject.widgets[0][2].title).to.be("widget test title");
             });
             it("should create the observable using the right name and configuration", () => {
                 setWidgets([createWidget("2882082", "test", 0, 0, 0, 0, {city: "test"})]);
