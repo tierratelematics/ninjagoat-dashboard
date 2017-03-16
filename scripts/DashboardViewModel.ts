@@ -1,4 +1,4 @@
-import {ObservableViewModel, ViewModel, Refresh} from "ninjagoat";
+import {ObservableViewModel, ViewModel, Refresh, ViewModelUtil} from "ninjagoat";
 import {inject, multiInject, optional} from "inversify";
 import {ModelState, ModelPhase} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, ViewModelContext} from "ninjagoat";
@@ -71,14 +71,10 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         if (widgetItem && widgetItem[1])
             return widgetItem;
         let entry = _.find(this.entries, widget => widget.name === setting.name);
-        let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
+        let viewmodelName = `${ViewModelUtil.getViewModelName(this.constructor)}:${ViewModelUtil.getViewModelName(entry.construct)}`;
         return [setting, this.viewmodelFactory.create(
             new ViewModelContext(this.dashboardArea(), viewmodelName, setting.configuration),
             entry.construct, entry.observable)];
-    }
-
-    private getViewModelName(viewmodel: Function): string {
-        return Reflect.getMetadata("ninjagoat:viewmodel", viewmodel);
     }
 
     private dashboardArea(): string {
@@ -120,7 +116,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     private observableForConfiguration(widgetName: string, configuration: any): IObservable<any> {
         let entry = _.find(this.entries, widget => widget.name === widgetName);
-        let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
+        let viewmodelName = `${ViewModelUtil.getViewModelName(this.constructor)}:${ViewModelUtil.getViewModelName(entry.construct)}`;
         return entry.observable(new ViewModelContext(this.dashboardArea(), viewmodelName, configuration));
     }
 
