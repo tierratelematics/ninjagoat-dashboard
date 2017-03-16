@@ -14,7 +14,8 @@ describe("Given a WidgetManager", () => {
     beforeEach(() => {
         settingsManager = Mock.ofType<IReactiveSettingsManager>();
         guidGenerator = Mock.ofType<IGUIDGenerator>();
-        subject = new WidgetManager(settingsManager.object, guidGenerator.object, "test");
+        subject = new WidgetManager(settingsManager.object, guidGenerator.object);
+        subject.setDashboardName("test");
     });
 
     context("when a new widget is added", () => {
@@ -39,6 +40,19 @@ describe("Given a WidgetManager", () => {
                     configuration: {}
                 }])), Times.once());
             });
+        });
+    });
+
+    context("when widgets were already requested", () => {
+        beforeEach(async() => {
+            guidGenerator.setup(u => u.generate()).returns(() => "unique-id");
+            settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([]));
+            await subject.add("test", "SMALL");
+        });
+        it("they should be kept in memory", async() => {
+            await subject.add("test", "SMALL");
+
+            settingsManager.verify(s => s.getValueAsync("ninjagoat.dashboard:test", It.isAny()), Times.once());
         });
     });
 
@@ -84,6 +98,37 @@ describe("Given a WidgetManager", () => {
                 x: 0,
                 y: 0,
                 configuration: {city: "test"}
+            }])), Times.once());
+        });
+    });
+
+    context("when a widget is moved", () => {
+        beforeEach(() => {
+            settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([{
+                id: "9292382",
+                name: "configurable",
+                w: 0,
+                h: 0,
+                x: 0,
+                y: 0,
+                configuration: {}
+            }]));
+        });
+        it("should save the new position", async() => {
+            await subject.move([{
+                id: "9292382",
+                x: 2,
+                y: 3
+            }]);
+
+            settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
+                id: "9292382",
+                name: "configurable",
+                w: 0,
+                h: 0,
+                x: 2,
+                y: 3,
+                configuration: {}
             }])), Times.once());
         });
     });
