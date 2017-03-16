@@ -3,9 +3,8 @@ import {interfaces} from "inversify";
 import {ReactiveSettingsManager, IReactiveSettingsManager} from "./ReactiveSettingsManager";
 import {IModelRetriever} from "ninjagoat-projections";
 import DashboardModelRetriever from "./DashboardModelRetriever";
-import {IWidgetManager} from "./widget/WidgetComponents";
 import {IWidgetManagerFactory, WidgetManagerFactory} from "./widget/WidgetManagerFactory";
-import {WidgetManager} from "./widget/WidgetManager";
+import {WidgetManager, IWidgetManager} from "./widget/WidgetManager";
 
 class DashboardModule implements IModule {
 

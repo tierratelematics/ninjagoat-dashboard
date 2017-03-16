@@ -10,6 +10,7 @@ export interface IWidgetManager {
     remove(id: string);
     configure(id: string, configuration?: any);
     move(positions: WidgetPosition[]);
+    resize(id: string, size: WidgetSize);
 }
 
 @injectable()
@@ -76,6 +77,17 @@ export class WidgetManager implements IWidgetManager {
                 item.y = position.y;
             }
         });
+        this.saveSettings(settings);
+    }
+
+    async resize(id: string, size: WidgetSize) {
+        let settings = await this.getSettings();
+        let setting = _.find(settings, setting => setting.id === id);
+        let widget = _.find(this.widgets, widget => widget.name === setting.name);
+        if (!_.includes(widget.sizes, size)) return;
+        setting.size = size;
+        setting.w = this.config.sizes[size].width;
+        setting.h = this.config.sizes[size].height;
         this.saveSettings(settings);
     }
 

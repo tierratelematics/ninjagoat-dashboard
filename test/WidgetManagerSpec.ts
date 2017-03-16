@@ -19,7 +19,7 @@ describe("Given a WidgetManager", () => {
                 construct: null,
                 observable: null,
                 name: "test",
-                sizes: ["SMALL"]
+                sizes: ["SMALL", "MEDIUM"]
             }
         ], settingsManager.object, guidGenerator.object);
         subject.setDashboardName("test");
@@ -31,8 +31,8 @@ describe("Given a WidgetManager", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([]));
         });
         context("and the size is not allowed", () => {
-            it("should not be added to settings", async () => {
-                await subject.add("test", "MEDIUM");
+            it("should not be added to settings", async() => {
+                await subject.add("test", "LARGE");
 
                 settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isAny()), Times.never());
             });
@@ -74,6 +74,7 @@ describe("Given a WidgetManager", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([{
                 id: "unique-id",
                 name: "test",
+                size: "SMALL",
                 w: 0,
                 h: 0,
                 x: 0,
@@ -93,6 +94,7 @@ describe("Given a WidgetManager", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([{
                 id: "9292382",
                 name: "configurable",
+                size: "SMALL",
                 w: 0,
                 h: 0,
                 x: 0,
@@ -106,6 +108,7 @@ describe("Given a WidgetManager", () => {
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                 id: "9292382",
                 name: "configurable",
+                size: "SMALL",
                 w: 0,
                 h: 0,
                 x: 0,
@@ -120,6 +123,7 @@ describe("Given a WidgetManager", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([{
                 id: "9292382",
                 name: "configurable",
+                size: "SMALL",
                 w: 0,
                 h: 0,
                 x: 0,
@@ -137,6 +141,7 @@ describe("Given a WidgetManager", () => {
             settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                 id: "9292382",
                 name: "configurable",
+                size: "SMALL",
                 w: 0,
                 h: 0,
                 x: 2,
@@ -147,12 +152,41 @@ describe("Given a WidgetManager", () => {
     });
 
     context("when a widget is resized", () => {
+        beforeEach(() => {
+            settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([{
+                id: "9292382",
+                name: "test",
+                size: "SMALL",
+                w: 0,
+                h: 0,
+                x: 0,
+                y: 0,
+                configuration: {}
+            }]));
+        });
         context("and the new dimension is allowed", () => {
-            it("should resize it");
+            it("should resize it", async() => {
+                await subject.resize("9292382", "MEDIUM");
+
+                settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
+                    id: "9292382",
+                    name: "test",
+                    size: "MEDIUM",
+                    w: 2,
+                    h: 2,
+                    x: 0,
+                    y: 0,
+                    configuration: {}
+                }])), Times.once());
+            });
         });
 
         context("and the new dimension is not allowed", () => {
-            it("should not resize it");
+            it("should not resize it", async() => {
+                await subject.resize("9292382", "LARGE");
+
+                settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isAny()), Times.never());
+            });
         });
     });
 });

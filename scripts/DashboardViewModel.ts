@@ -128,6 +128,10 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         this.widgetManager.move(positions);
     }
 
+    resize(id: string, size: WidgetSize) {
+        this.widgetManager.resize(id, size);
+    }
+
     dispose() {
         super.dispose();
         if (this.viewmodelsSubscription)
