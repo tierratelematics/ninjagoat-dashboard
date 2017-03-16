@@ -4,8 +4,8 @@ import {ReactiveSettingsManager, IReactiveSettingsManager} from "./ReactiveSetti
 import {IModelRetriever} from "ninjagoat-projections";
 import DashboardModelRetriever from "./DashboardModelRetriever";
 import {IWidgetManager} from "./widget/WidgetComponents";
-import WidgetManager from "./widget/WidgetManager";
 import {IWidgetManagerFactory, WidgetManagerFactory} from "./widget/WidgetManagerFactory";
+import {WidgetManager} from "./widget/WidgetManager";
 
 class DashboardModule implements IModule {
 

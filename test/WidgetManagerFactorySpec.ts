@@ -4,7 +4,7 @@ import {IMock, Mock, It} from "typemoq";
 import {WidgetManagerFactory} from "../scripts/widget/WidgetManagerFactory";
 import {IWidgetManager} from "../scripts/widget/WidgetComponents";
 import {IObjectContainer} from "ninjagoat";
-import WidgetManager from "../scripts/widget/WidgetManager";
+import {WidgetManager} from "../scripts/widget/WidgetManager";
 
 describe("Given a WidgetManagerFactory", () => {
     let subject: WidgetManagerFactory;
@@ -41,7 +41,7 @@ describe("Given a WidgetManagerFactory", () => {
             it("should correctly set the dashboard name", () => {
                 let manager:any = subject.managerFor("test");
 
-                expect(manager.dashboardName).to.be("test");
+                expect(manager.name).to.be("test");
             });
         });
     });

@@ -1,7 +1,7 @@
 import {IWidgetManager} from "./WidgetComponents";
 import {Dictionary, IObjectContainer} from "ninjagoat";
 import {inject, injectable} from "inversify";
-import WidgetManager from "./WidgetManager";
+import {WidgetManager} from "./WidgetManager";
 
 export interface IWidgetManagerFactory {
     managerFor(dashboardName: string): IWidgetManager;

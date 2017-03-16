@@ -5,8 +5,15 @@ import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
 import * as _ from "lodash";
 import {inject, optional, injectable} from "inversify";
 
+export interface IWidgetManager {
+    add(name: string, size: WidgetSize);
+    remove(id: string);
+    configure(id: string, configuration?: any);
+    move(positions: WidgetPosition[]);
+}
+
 @injectable()
-class WidgetManager implements IWidgetManager {
+export class WidgetManager implements IWidgetManager {
 
     private dashboardName: string;
     private settings: IWidgetSettings<any>[];
@@ -69,5 +76,3 @@ class WidgetManager implements IWidgetManager {
     }
 
 }
-
-export default WidgetManager

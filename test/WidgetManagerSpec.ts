@@ -4,7 +4,7 @@ import {Mock, IMock, Times, It} from "typemoq";
 import {IGUIDGenerator} from "ninjagoat";
 import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
 import {IWidgetSettings} from "../scripts/widget/WidgetComponents";
-import WidgetManager from "../scripts/widget/WidgetManager";
+import {WidgetManager} from "../scripts/widget/WidgetManager";
 
 describe("Given a WidgetManager", () => {
     let subject: WidgetManager;

@@ -25,7 +25,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     config: IDashboardConfig;
     breakpoint: string;
     cols: number;
-    dashboardName: string = "";
+    name: string = "";
     loading = false;
     failure: Error = null;
     private area = "";
@@ -49,8 +49,8 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
             this.loading = false;
             if (data.phase === ModelPhase.Ready) {
                 this.failure = null;
-                this.dashboardName = data.model.name;
-                this.widgetManager = this.widgetManagerFactory.managerFor(this.dashboardName);
+                this.name = data.model.name;
+                this.widgetManager = this.widgetManagerFactory.managerFor(this.name);
                 this.disposeRemovedWidgets(data.model.widgets);
                 this.widgets = _.map(data.model.widgets, widget => this.constructViewModel(widget));
                 this.subscribeToViewModelsChanges();

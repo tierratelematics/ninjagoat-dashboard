@@ -49,16 +49,16 @@ export type DashboardModel = {
 export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[];
-    registeredWidgets: IWidgetEntry<any>[];
+    entries: IWidgetEntry<any>[];
     config: IDashboardConfig;
     breakpoint: string;
     cols: number;
-    dashboardName: string;
+    name: string;
     loading: boolean;
     failure: Error;
 
-    constructor(widgets: IWidgetEntry<any>[], viewmodelFactory: IViewModelFactory, settingsManager: IReactiveSettingsManager,
-                guidGenerator: IGUIDGenerator, registry: IViewModelRegistry, config: IDashboardConfig);
+    constructor(widgets: IWidgetEntry<any>[], viewmodelFactory: IViewModelFactory, widgetManagerFactory: IWidgetManagerFactory,
+                registry: IViewModelRegistry, config: IDashboardConfig);
 
     protected onData(data: ModelState<DashboardModel>): void;
 
@@ -66,7 +66,9 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     remove(id: string);
 
-    configure(id: string);
+    configure(id: string, configuration?: any);
+
+    move(positions: WidgetPosition[]);
 
     dispose();
 
@@ -129,10 +131,35 @@ export interface IWidgetMetadata {
     thumbnail?: string;
 }
 
+export interface IWidgetManagerFactory {
+    managerFor(dashboardName: string): IWidgetManager;
+}
+
 export interface IWidgetManager {
     add(name: string, size: WidgetSize);
     remove(id: string);
-    configure(id: string);
+    configure(id: string, configuration?: any);
+    move(positions: WidgetPosition[]);
+}
+
+export class WidgetManager implements IWidgetManager {
+
+    constructor(settingsManager: IReactiveSettingsManager, guidGenerator: IGUIDGenerator, config: IDashboardConfig) {
+    }
+
+    add(name: string, size: WidgetSize);
+
+    remove(id: string);
+
+    configure(id: string, configuration?: any);
+
+    move(positions: WidgetPosition[]);
+}
+
+export interface WidgetPosition {
+    id: string;
+    x: number;
+    y: number;
 }
 
 export interface IWidgetSettings<T> {

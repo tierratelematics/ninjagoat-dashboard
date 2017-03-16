@@ -14,13 +14,6 @@ export interface IWidgetEntry<T> {
     metadata?: IWidgetMetadata;
 }
 
-export interface IWidgetManager {
-    add(name: string, size: WidgetSize);
-    remove(id: string);
-    configure(id: string, configuration?: any);
-    move(positions: WidgetPosition[]);
-}
-
 export interface WidgetPosition {
     id: string;
     x: number;
