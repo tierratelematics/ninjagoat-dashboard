@@ -189,3 +189,7 @@ export type DashboardProps = {
     events: IDashboardEvents,
     templateSelector: WidgetTemplateSelector
 };
+
+export abstract class WidgetView<T, S> extends Component<{item: WidgetItem}, {}> {
+    abstract render();
+}
