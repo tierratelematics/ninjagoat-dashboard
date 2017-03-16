@@ -81,6 +81,7 @@ describe("Given a DashboardViewModel", () => {
         return {
             id: id,
             name: name,
+            size: "SMALL",
             w: w,
             h: h,
             x: x,

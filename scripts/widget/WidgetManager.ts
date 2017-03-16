@@ -35,6 +35,7 @@ export class WidgetManager implements IWidgetManager {
         settings.push({
             id: this.guidGenerator.generate(),
             name: name,
+            size: size,
             w: this.config.sizes[size].width,
             h: this.config.sizes[size].height,
             x: 0,

@@ -45,6 +45,7 @@ describe("Given a WidgetManager", () => {
                 settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                     id: "unique-id",
                     name: "test",
+                    size: "SMALL",
                     w: 1,
                     h: 1,
                     x: 0,
