@@ -14,7 +14,14 @@ describe("Given a WidgetManager", () => {
     beforeEach(() => {
         settingsManager = Mock.ofType<IReactiveSettingsManager>();
         guidGenerator = Mock.ofType<IGUIDGenerator>();
-        subject = new WidgetManager(settingsManager.object, guidGenerator.object);
+        subject = new WidgetManager([
+            {
+                construct: null,
+                observable: null,
+                name: "test",
+                sizes: ["SMALL"]
+            }
+        ], settingsManager.object, guidGenerator.object);
         subject.setDashboardName("test");
     });
 
@@ -24,12 +31,17 @@ describe("Given a WidgetManager", () => {
             settingsManager.setup(s => s.getValueAsync<IWidgetSettings<any>[]>("ninjagoat.dashboard:test", It.isValue([]))).returns(() => Promise.resolve([]));
         });
         context("and the size is not allowed", () => {
-            it("should not be added to settings");
+            it("should not be added to settings", async () => {
+                await subject.add("test", "MEDIUM");
+
+                settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isAny()), Times.never());
+            });
         });
 
         context("and the size is allowed", () => {
             it("should be added to settings", async() => {
                 await subject.add("test", "SMALL");
+
                 settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
                     id: "unique-id",
                     name: "test",

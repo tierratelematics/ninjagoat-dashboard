@@ -1,9 +1,9 @@
-import {WidgetSize, IWidgetSettings, WidgetPosition} from "./WidgetComponents";
+import {WidgetSize, IWidgetSettings, WidgetPosition, IWidgetEntry} from "./WidgetComponents";
 import {IReactiveSettingsManager} from "../ReactiveSettingsManager";
 import {IGUIDGenerator} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
 import * as _ from "lodash";
-import {inject, optional, injectable} from "inversify";
+import {inject, optional, injectable, multiInject} from "inversify";
 
 export interface IWidgetManager {
     add(name: string, size: WidgetSize);
@@ -18,7 +18,8 @@ export class WidgetManager implements IWidgetManager {
     private dashboardName: string;
     private settings: IWidgetSettings<any>[];
 
-    constructor(@inject("IReactiveSettingsManager") private settingsManager: IReactiveSettingsManager,
+    constructor(@multiInject("IWidgetEntry") private widgets: IWidgetEntry<any>[],
+                @inject("IReactiveSettingsManager") private settingsManager: IReactiveSettingsManager,
                 @inject("IGUIDGenerator") private guidGenerator: IGUIDGenerator,
                 @inject("IDashboardConfig") @optional() private config: IDashboardConfig = new DefaultDashboardConfig()) {
     }
@@ -28,6 +29,8 @@ export class WidgetManager implements IWidgetManager {
     }
 
     async add(name: string, size: WidgetSize) {
+        let widget = _.find(this.widgets, widget => widget.name === name);
+        if (!_.includes(widget.sizes, size)) return;
         let settings = await this.getSettings();
         settings.push({
             id: this.guidGenerator.generate(),
