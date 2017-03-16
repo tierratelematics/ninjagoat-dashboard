@@ -25,12 +25,14 @@ export class Dashboard extends React.Component<DashboardProps, any> {
                                           cols={config.columns}
                                           rowHeight={config.rowHeight}>
             {_.map(widgets, widget => <div key={widget[0].id} data-grid={{
-                i: widget[0].id,
-                w: widget[0].w,
-                h: widget[0].h,
-                x: widget[0].x,
-                y: widget[0].y
-            }}>
+                    i: widget[0].id,
+                    w: widget[0].w,
+                    h: widget[0].h,
+                    x: widget[0].x,
+                    y: widget[0].y,
+                    isResizable: false,
+                    draggableHandle: config.draggableHandle
+                }}>
                 {templateSelector(widget)}
             </div>)}
         </ResponsiveReactGridLayout>;
