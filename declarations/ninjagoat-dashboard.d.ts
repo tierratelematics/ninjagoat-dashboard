@@ -144,8 +144,7 @@ export interface IWidgetManager {
 
 export class WidgetManager implements IWidgetManager {
 
-    constructor(settingsManager: IReactiveSettingsManager, guidGenerator: IGUIDGenerator, config: IDashboardConfig) {
-    }
+    constructor(settingsManager: IReactiveSettingsManager, guidGenerator: IGUIDGenerator, config: IDashboardConfig);
 
     add(name: string, size: WidgetSize);
 
