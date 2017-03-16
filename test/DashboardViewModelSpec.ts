@@ -27,10 +27,12 @@ describe("Given a DashboardViewModel", () => {
         widgetManagerFactory.setup(w => w.managerFor(It.isAny())).returns(() => widgetManager.object);
         viewmodelFactory = Mock.ofType<IViewModelFactory>();
         registry = Mock.ofType<IViewModelRegistry>();
-        registry.setup(r => r.getAreas()).returns(() => [{
-            area: "dashboard",
-            entries: [new RegistryEntry(DashboardViewModel, "Dashboard", context => Observable.empty<any>(), null)]
-        }]);
+        registry.setup(r => r.getEntry(It.isAny())).returns(() => {
+            return {
+                area: "dashboard",
+                viewmodel: new RegistryEntry(DashboardViewModel, "Dashboard", context => Observable.empty<any>(), null)
+            }
+        });
         subject = new DashboardViewModel([
             {
                 construct: MockViewModel,

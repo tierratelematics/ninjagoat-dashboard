@@ -73,7 +73,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         let entry = _.find(this.entries, widget => widget.name === setting.name);
         let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
         return [setting, this.viewmodelFactory.create(
-            new ViewModelContext(this.areaOfDashboard(), viewmodelName, setting.configuration),
+            new ViewModelContext(this.dashboardArea(), viewmodelName, setting.configuration),
             entry.construct, entry.observable)];
     }
 
@@ -81,15 +81,10 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         return Reflect.getMetadata("ninjagoat:viewmodel", viewmodel);
     }
 
-    private areaOfDashboard(): string {
-        if (this.area)
-            return this.area;
-        let area = null;
-        _.forEach(this.registry.getAreas(), areaRegistry => {
-            let entry = _.find(areaRegistry.entries, entry => entry.construct === this.constructor);
-            if (entry) area = areaRegistry.area;
-        });
-        return area;
+    private dashboardArea(): string {
+        if (!this.area)
+            this.area = this.registry.getEntry(this.constructor).area;
+        return this.area;
     }
 
     private subscribeToViewModelsChanges() {
@@ -126,7 +121,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     private observableForConfiguration(widgetName: string, configuration: any): IObservable<any> {
         let entry = _.find(this.entries, widget => widget.name === widgetName);
         let viewmodelName = `${this.getViewModelName(this.constructor)}:${this.getViewModelName(entry.construct)}`;
-        return entry.observable(new ViewModelContext(this.areaOfDashboard(), viewmodelName, configuration));
+        return entry.observable(new ViewModelContext(this.dashboardArea(), viewmodelName, configuration));
     }
 
     move(positions: WidgetPosition[]) {
