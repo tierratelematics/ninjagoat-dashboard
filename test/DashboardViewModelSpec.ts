@@ -5,16 +5,16 @@ import {DashboardViewModel, DashboardModel} from "../scripts/DashboardViewModel"
 import MockViewModel from "./fixtures/MockViewModel";
 import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
-import {IViewModelFactory, IViewModelRegistry, RegistryEntry, IGUIDGenerator, ViewModelContext} from "ninjagoat";
+import {IViewModelFactory, IViewModelRegistry, RegistryEntry, ViewModelContext} from "ninjagoat";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
-import {IReactiveSettingsManager} from "../scripts/ReactiveSettingsManager";
-import {IWidgetSettings} from "../scripts/widget/WidgetComponents";
+import {IWidgetSettings, IWidgetManager} from "../scripts/widget/WidgetComponents";
+import {IWidgetManagerFactory} from "../scripts/widget/WidgetManagerFactory";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;
     let viewmodelFactory: IMock<IViewModelFactory>;
-    let settingsManager: IMock<IReactiveSettingsManager>;
-    let guidGenerator: IMock<IGUIDGenerator>;
+    let widgetManager: IMock<IWidgetManager>;
+    let widgetManagerFactory: IMock<IWidgetManagerFactory>;
     let dataSource: Subject<ModelState<DashboardModel>>;
     let registry: IMock<IViewModelRegistry>;
     let testSource: Subject<any>;
@@ -22,9 +22,10 @@ describe("Given a DashboardViewModel", () => {
 
     beforeEach(() => {
         dataSource = new Subject<ModelState<DashboardModel>>();
-        settingsManager = Mock.ofType<IReactiveSettingsManager>();
+        widgetManagerFactory = Mock.ofType<IWidgetManagerFactory>();
+        widgetManager = Mock.ofType<IWidgetManager>();
+        widgetManagerFactory.setup(w => w.managerFor(It.isAny())).returns(() => widgetManager.object);
         viewmodelFactory = Mock.ofType<IViewModelFactory>();
-        guidGenerator = Mock.ofType<IGUIDGenerator>();
         registry = Mock.ofType<IViewModelRegistry>();
         registry.setup(r => r.getAreas()).returns(() => [{
             area: "dashboard",
@@ -42,7 +43,7 @@ describe("Given a DashboardViewModel", () => {
                 name: "configurable",
                 sizes: ["SMALL"]
             }
-        ], viewmodelFactory.object, settingsManager.object, guidGenerator.object, registry.object);
+        ], viewmodelFactory.object, widgetManagerFactory.object, registry.object);
 
         testSource = new Subject<any>();
         configurableSource = new Subject<any>();
@@ -122,6 +123,7 @@ describe("Given a DashboardViewModel", () => {
                 viewmodelFactory.verify(v => v.create(It.isAny(), It.isAny(), It.isAny()), Times.exactly(2));
             });
         });
+
     });
 
     context("when a widget triggers a new state", () => {
@@ -141,7 +143,7 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([createWidget("2882082", "test")]);
                 await subject.configure("2882082");
 
-                settingsManager.verify(s => s.setValueAsync(It.isAny(), It.isAny()), Times.never());
+                widgetManager.verify(w => w.configure(It.isAny(), It.isAny()), Times.never());
             });
         });
 
@@ -150,15 +152,7 @@ describe("Given a DashboardViewModel", () => {
                 setWidgets([createWidget("9292382", "configurable")]);
                 await subject.configure("9292382");
 
-                settingsManager.verify(s => s.setValueAsync(It.isAny(), It.isValue([{
-                    id: "9292382",
-                    name: "configurable",
-                    w: 0,
-                    h: 0,
-                    x: 0,
-                    y: 0,
-                    configuration: {city: "test"}
-                }])), Times.once());
+                widgetManager.verify(w => w.configure("9292382", It.isValue({city: "test"})), Times.once());
             });
         });
     });
@@ -174,14 +168,10 @@ describe("Given a DashboardViewModel", () => {
                 y: 100
             }]);
 
-            settingsManager.verify(s => s.setValueAsync("ninjagoat.dashboard:test", It.isValue([{
+            widgetManager.verify(w => w.move(It.isValue([{
                 id: "2882082",
-                name: "test",
-                w: 0,
-                h: 0,
                 x: 200,
-                y: 100,
-                configuration: {}
+                y: 100
             }])), Times.once());
         });
     });
