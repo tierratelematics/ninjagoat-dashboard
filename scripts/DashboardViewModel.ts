@@ -1,4 +1,4 @@
-import {ObservableViewModel, ViewModel, Refresh, ViewModelUtil} from "ninjagoat";
+import {ObservableViewModel, ViewModel, Refresh, ViewModelUtil, Dictionary} from "ninjagoat";
 import {inject, multiInject, optional} from "inversify";
 import {ModelState, ModelPhase} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, ViewModelContext} from "ninjagoat";
@@ -7,10 +7,11 @@ import {IDashboardEvents, LayoutItem} from "./DashboardEvents";
 import * as _ from "lodash";
 import {Observable, IDisposable, IObservable} from "rx";
 import {
-    IWidgetSettings, IWidgetEntry, IWidgetManager, WidgetSize, WidgetItem,
+    IWidgetSettings, IWidgetEntry, WidgetSize, WidgetItem,
     WidgetPosition
 } from "./widget/WidgetComponents";
 import {IWidgetManagerFactory} from "./widget/WidgetManagerFactory";
+import {IWidgetManager} from "./widget/WidgetManager";
 
 export type DashboardModel = {
     name: string;
@@ -21,7 +22,7 @@ export type DashboardModel = {
 export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[] = [];
-    entries: IWidgetEntry<any>[] = [];
+    entries: Dictionary<IWidgetEntry<any>> = {};
     config: IDashboardConfig;
     breakpoint: string;
     cols: number;
@@ -38,8 +39,8 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
                 @inject("IViewModelRegistry") private registry: IViewModelRegistry,
                 @inject("IDashboardConfig") @optional() config: IDashboardConfig = new DefaultDashboardConfig()) {
         super();
-        this.entries = widgets;
         this.config = config;
+        this.entries = _.zipObject<IWidgetEntry<any>, Dictionary<IWidgetEntry<any>>>(_.map(widgets, 'name'), widgets);
     }
 
     protected onData(data: ModelState<DashboardModel>): void {
@@ -64,7 +65,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         let widgetItem = _.find(this.widgets, widget => widget[0].id === setting.id);
         if (widgetItem && widgetItem[1])
             return widgetItem;
-        let entry = _.find(this.entries, widget => widget.name === setting.name);
+        let entry = this.entries[setting.name];
         let viewmodelName = `${ViewModelUtil.getViewModelName(this.constructor)}:${ViewModelUtil.getViewModelName(entry.construct)}`;
         return [setting, this.viewmodelFactory.create(
             new ViewModelContext(this.dashboardArea(), viewmodelName, setting.configuration),
@@ -118,7 +119,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     }
 
     private observableForConfiguration(widgetName: string, configuration: any): IObservable<any> {
-        let entry = _.find(this.entries, widget => widget.name === widgetName);
+        let entry = this.entries[widgetName];
         let viewmodelName = `${ViewModelUtil.getViewModelName(this.constructor)}:${ViewModelUtil.getViewModelName(entry.construct)}`;
         return entry.observable(new ViewModelContext(this.dashboardArea(), viewmodelName, configuration));
     }

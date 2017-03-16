@@ -8,7 +8,8 @@ import {
     IViewModel,
     ObservableViewModel,
     ViewModelContext,
-    IViewModelFactory
+    IViewModelFactory,
+    Dictionary
 } from "ninjagoat";
 import {IModelRetriever, ModelState} from "ninjagoat-projections";
 import {Observable, IObservable} from "rx";
@@ -49,7 +50,7 @@ export type DashboardModel = {
 export class DashboardViewModel extends ObservableViewModel<ModelState<DashboardModel>> implements IWidgetManager, IDashboardEvents {
 
     widgets: WidgetItem[];
-    entries: IWidgetEntry<any>[];
+    entries: Dictionary<IWidgetEntry<any>>;
     config: IDashboardConfig;
     breakpoint: string;
     cols: number;

@@ -7,8 +7,9 @@ import {Observable, Subject} from "rx";
 import {ModelState} from "ninjagoat-projections";
 import {IViewModelFactory, IViewModelRegistry, RegistryEntry, ViewModelContext} from "ninjagoat";
 import ConfigurableViewModel from "./fixtures/ConfigurableViewModel";
-import {IWidgetSettings, IWidgetManager} from "../scripts/widget/WidgetComponents";
+import {IWidgetSettings} from "../scripts/widget/WidgetComponents";
 import {IWidgetManagerFactory} from "../scripts/widget/WidgetManagerFactory";
+import {IWidgetManager} from "../scripts/widget/WidgetManager";
 
 describe("Given a DashboardViewModel", () => {
     let subject: DashboardViewModel;
@@ -87,8 +88,8 @@ describe("Given a DashboardViewModel", () => {
 
     context("on startup", () => {
         it("should expose the registered widgets", () => {
-            expect(subject.entries[0].construct).to.be(MockViewModel);
-            expect(subject.entries[1].construct).to.be(ConfigurableViewModel);
+            expect(subject.entries["test"].construct).to.be(MockViewModel);
+            expect(subject.entries["configurable"].construct).to.be(ConfigurableViewModel);
         });
     });
 
