@@ -193,3 +193,7 @@ export type DashboardProps = {
 export abstract class WidgetView<T, S> extends Component<{item: WidgetItem}, {}> {
     abstract render();
 }
+
+export class Card extends Component<{title: string}, {}> {
+    render();
+}
