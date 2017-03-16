@@ -1,4 +1,4 @@
-import {IWidgetManager, WidgetSize, IWidgetSettings, WidgetPosition} from "./WidgetComponents";
+import {WidgetSize, IWidgetSettings, WidgetPosition} from "./WidgetComponents";
 import {IReactiveSettingsManager} from "../ReactiveSettingsManager";
 import {IGUIDGenerator} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
