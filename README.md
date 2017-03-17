@@ -27,14 +27,14 @@ container.bind<IWidgetEntry<WidgetModel>>("IWidgetEntry").toConstantValue({
     construct: WidgetViewModel,
     observable: (context) => Observable.just(context.parameters),
     name: "widget-1",
-    sizes: ["SMALL", "MEDIUM"]
+    sizes: ["small", "large"]
 });
 
 container.bind<IWidgetEntry<WidgetModel>>("IWidgetEntry").toConstantValue({
     construct: Widget2ViewModel,
     observable: (context) => Observable.just(context.parameters),
     name: "widget-2",
-    sizes: ["SMALL", "LARGE"]
+    sizes: ["small", "large"]
 });
 ```
 
@@ -87,8 +87,8 @@ class Widget extends WidgetView<WidgetViewModel, WidgetModel> {
         return <Card title={"Widget"}>
             <button onClick={() => this.widgetManager.remove(this.settings.id)}>Close</button>
             <button onClick={() => this.widgetManager.configure(this.settings.id)}>Configure</button>
-            <button onClick={() => this.widgetManager.resize(this.settings.id, "LARGE")}>Make large</button>
-            <button onClick={() => this.widgetManager.resize(this.settings.id, "SMALL")}>Make small</button>
+            <button onClick={() => this.widgetManager.resize(this.settings.id, "large")}>Make large</button>
+            <button onClick={() => this.widgetManager.resize(this.settings.id, "small")}>Make small</button>
         </Card>
     }
 }

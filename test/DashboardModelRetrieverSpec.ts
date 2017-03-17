@@ -13,7 +13,7 @@ describe("Given DashboardModelRetriever", () => {
     let widget: IWidgetSettings<any> = {
         id: "",
         name: "",
-        size: "SMALL",
+        size: "small",
         w: 0,
         h: 0,
         x: 0,
@@ -47,7 +47,7 @@ describe("Given DashboardModelRetriever", () => {
                 observer.onNext([{
                     id: "",
                     name: "",
-                    size: "SMALL",
+                    size: "small",
                     w: 100,
                     h: 0,
                     x: 0,
@@ -64,7 +64,7 @@ describe("Given DashboardModelRetriever", () => {
                     widgets: [{
                         id: "",
                         name: "",
-                        size: "SMALL",
+                        size: "small",
                         w: 100,
                         h: 0,
                         x: 0,

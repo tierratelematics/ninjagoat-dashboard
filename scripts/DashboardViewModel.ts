@@ -6,10 +6,7 @@ import {IDashboardConfig, DefaultDashboardConfig} from "./DashboardConfig";
 import {IDashboardEvents, LayoutItem} from "./DashboardEvents";
 import * as _ from "lodash";
 import {Observable, IDisposable, IObservable} from "rx";
-import {
-    IWidgetSettings, IWidgetEntry, WidgetSize, WidgetItem,
-    WidgetPosition
-} from "./widget/WidgetComponents";
+import {IWidgetSettings, IWidgetEntry, WidgetItem, WidgetPosition} from "./widget/WidgetComponents";
 import {IWidgetManagerFactory} from "./widget/WidgetManagerFactory";
 import {IWidgetManager} from "./widget/WidgetManager";
 
@@ -99,7 +96,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
     private refreshView() {
     }
 
-    add(name: string, size: WidgetSize) {
+    add(name: string, size: string) {
         this.widgetManager.add(name, size);
     }
 
@@ -130,7 +127,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
         this.widgetManager.move(positions);
     }
 
-    resize(id: string, size: WidgetSize) {
+    resize(id: string, size: string) {
         this.widgetManager.resize(id, size);
     }
 

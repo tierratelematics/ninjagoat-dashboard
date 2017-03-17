@@ -63,7 +63,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     protected onData(data: ModelState<DashboardModel>): void;
 
-    add(name: string, size: WidgetSize);
+    add(name: string, size: string);
 
     remove(id: string);
 
@@ -71,7 +71,7 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     move(positions: WidgetPosition[]);
 
-    resize(id: string, size: WidgetSize);
+    resize(id: string, size: string);
 
     dispose();
 
@@ -98,16 +98,16 @@ export type LayoutItem = {
 };
 
 export interface IDashboardConfig {
-    sizes: {
-        SMALL: WidgetDimension,
-        MEDIUM: WidgetDimension,
-        LARGE: WidgetDimension
-    };
-    rowHeight: number;
+    sizes: WidgetSize[];
+    rowHeight: number
     draggableHandle: string;
 }
 
-export type WidgetDimension = {width: number, height: number};
+export type WidgetSize = {
+    name: string;
+    width: number;
+    height: number;
+}
 
 export interface IConfigurableWidget<T> {
     configure(): Promise<T>;
@@ -117,7 +117,7 @@ export interface IWidgetEntry<T> {
     construct: interfaces.Newable<IViewModel<T>>;
     observable: (context: ViewModelContext) => IObservable<T>;
     name: string;
-    sizes: WidgetSize[];
+    sizes: string[];
     metadata?: IWidgetMetadata;
 }
 
@@ -133,18 +133,18 @@ export interface IWidgetManagerFactory {
 }
 
 export interface IWidgetManager {
-    add(name: string, size: WidgetSize);
+    add(name: string, size: string);
     remove(id: string);
     configure(id: string, configuration?: any);
     move(positions: WidgetPosition[]);
-    resize(id: string, size: WidgetSize);
+    resize(id: string, size: string);
 }
 
 export class WidgetManager implements IWidgetManager {
 
     constructor(settingsManager: IReactiveSettingsManager, guidGenerator: IGUIDGenerator, config: IDashboardConfig);
 
-    add(name: string, size: WidgetSize);
+    add(name: string, size: string);
 
     remove(id: string);
 
@@ -152,7 +152,7 @@ export class WidgetManager implements IWidgetManager {
 
     move(positions: WidgetPosition[]);
 
-    resize(id: string, size: WidgetSize);
+    resize(id: string, size: string);
 }
 
 export interface WidgetPosition {
@@ -171,8 +171,6 @@ export interface IWidgetSettings<T> {
     y: number;
     configuration: T;
 }
-
-export type WidgetSize = "SMALL" | "MEDIUM" | "LARGE";
 
 export interface WidgetTemplateSelector {
     (widget: WidgetItem): ReactElement<any>;

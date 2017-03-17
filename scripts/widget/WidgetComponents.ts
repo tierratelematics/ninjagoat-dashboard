@@ -10,7 +10,7 @@ export interface IWidgetEntry<T> {
     construct: interfaces.Newable<IViewModel<T>>;
     observable: (context: ViewModelContext) => IObservable<T>;
     name: string;
-    sizes: WidgetSize[];
+    sizes: string[];
     metadata?: IWidgetMetadata;
 }
 
@@ -39,5 +39,3 @@ export interface IWidgetSettings<T> {
     y: number;
     configuration: T;
 }
-
-export type WidgetSize = "SMALL" | "MEDIUM" | "LARGE";

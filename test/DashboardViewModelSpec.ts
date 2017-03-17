@@ -37,7 +37,7 @@ describe("Given a DashboardViewModel", () => {
                 construct: MockViewModel,
                 observable: context => Observable.empty(),
                 name: "test",
-                sizes: ["SMALL"],
+                sizes: ["small"],
                 metadata: {
                     title: "widget test title"
                 }
@@ -45,7 +45,7 @@ describe("Given a DashboardViewModel", () => {
                 construct: ConfigurableViewModel,
                 observable: context => Observable.empty(),
                 name: "configurable",
-                sizes: ["SMALL"]
+                sizes: ["small"]
             }
         ], viewmodelFactory.object, widgetManagerFactory.object, registry.object);
 
@@ -76,7 +76,7 @@ describe("Given a DashboardViewModel", () => {
         return {
             id: id,
             name: name,
-            size: "SMALL",
+            size: "small",
             w: w,
             h: h,
             x: x,

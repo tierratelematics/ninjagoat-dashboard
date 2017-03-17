@@ -1,4 +1,4 @@
-import {WidgetSize, IWidgetSettings, WidgetPosition, IWidgetEntry} from "./WidgetComponents";
+import {IWidgetSettings, WidgetPosition, IWidgetEntry} from "./WidgetComponents";
 import {IReactiveSettingsManager} from "../ReactiveSettingsManager";
 import {IGUIDGenerator} from "ninjagoat";
 import {IDashboardConfig, DefaultDashboardConfig} from "../DashboardConfig";
@@ -6,11 +6,11 @@ import * as _ from "lodash";
 import {inject, optional, injectable, multiInject} from "inversify";
 
 export interface IWidgetManager {
-    add(name: string, size: WidgetSize);
+    add(name: string, size: string);
     remove(id: string);
     configure(id: string, configuration?: any);
     move(positions: WidgetPosition[]);
-    resize(id: string, size: WidgetSize);
+    resize(id: string, size: string);
 }
 
 @injectable()
@@ -29,16 +29,17 @@ export class WidgetManager implements IWidgetManager {
         this.dashboardName = dashboardName;
     }
 
-    async add(name: string, size: WidgetSize) {
+    async add(name: string, size: string) {
         let widget = _.find(this.widgets, widget => widget.name === name);
         if (!_.includes(widget.sizes, size)) return;
         let settings = await this.getSettings();
+        let dimensions = _.find(this.config.sizes, configSize => configSize.name === size);
         settings.push({
             id: this.guidGenerator.generate(),
             name: name,
             size: size,
-            w: this.config.sizes[size].width,
-            h: this.config.sizes[size].height,
+            w: dimensions.width,
+            h: dimensions.height,
             x: 0,
             y: Number.MAX_VALUE,
             configuration: {}
@@ -80,14 +81,15 @@ export class WidgetManager implements IWidgetManager {
         this.saveSettings(settings);
     }
 
-    async resize(id: string, size: WidgetSize) {
+    async resize(id: string, size: string) {
         let settings = await this.getSettings();
         let setting = _.find(settings, setting => setting.id === id);
         let widget = _.find(this.widgets, widget => widget.name === setting.name);
         if (!_.includes(widget.sizes, size)) return;
+        let dimensions = _.find(this.config.sizes, configSize => configSize.name === size);
         setting.size = size;
-        setting.w = this.config.sizes[size].width;
-        setting.h = this.config.sizes[size].height;
+        setting.w = dimensions.width;
+        setting.h = dimensions.height;
         this.saveSettings(settings);
     }
 
