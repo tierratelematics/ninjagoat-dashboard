@@ -19,20 +19,24 @@ export class Dashboard extends React.Component<DashboardProps, any> {
 
     render() {
         let {widgets, config, events, templateSelector} = this.props;
-        return <ResponsiveReactGridLayout onLayoutChange={events.layoutChange.bind(events)}
-                                          onBreakpointChange={events.breakpointChange.bind(events)}
-                                          className="layout"
-                                          isResizable={false}
-                                          draggableHandle={config.draggableHandle}
-                                          cols={config.columns}
-                                          rowHeight={config.rowHeight}>
-            {_.map(widgets, widget => <div key={widget[0].id} data-grid={{
+        let layouts = {
+            lg: _.map(widgets, widget => {
+                return {
                     i: widget[0].id,
                     w: widget[0].w,
                     h: widget[0].h,
                     x: widget[0].x,
                     y: widget[0].y,
-                }}>
+                };
+            })
+        };
+        return <ResponsiveReactGridLayout onLayoutChange={events.layoutChange.bind(events)}
+                                          onBreakpointChange={events.breakpointChange.bind(events)}
+                                          className="layout"
+                                          layouts={layouts}
+                                          draggableHandle={config.draggableHandle}
+                                          rowHeight={config.rowHeight}>
+            {_.map(widgets, widget => <div key={widget[0].id}>
                 {templateSelector(widget)}
             </div>)}
         </ResponsiveReactGridLayout>;

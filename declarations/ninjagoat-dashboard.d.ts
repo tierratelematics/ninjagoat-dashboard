@@ -103,14 +103,8 @@ export interface IDashboardConfig {
         MEDIUM: WidgetDimension,
         LARGE: WidgetDimension
     };
-    columns: {
-        lg: number,
-        md: number,
-        sm: number,
-        xs: number,
-        xxs: number
-    };
     rowHeight: number;
+    draggableHandle: string;
 }
 
 export type WidgetDimension = {width: number, height: number};
