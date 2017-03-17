@@ -190,7 +190,12 @@ export type DashboardProps = {
     templateSelector: WidgetTemplateSelector
 };
 
-export abstract class WidgetView<T, S> extends Component<{item: WidgetItem}, {}> {
+export abstract class WidgetView<T, S> extends Component<{item: WidgetItem, widgetManager: IWidgetManager}, {}> {
+    settings: IWidgetSettings<S>;
+    viewModel: T;
+    metadata: IWidgetMetadata;
+    widgetManager: IWidgetManager;
+
     abstract render();
 }
 
