@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '6'
+install:
+- npm install smild@4.3.6 -g
+- npm install
+- npm install react react-router react-dom ninjagoat@2.0.0
+script: smild test && smild build
+deploy:
+  skip_cleanup: true
+  provider: npm
+  email: sysadmin@tierratelematics.com
+  api_key:
+    secure: vAPyVJKPVaKDekLxp8OrvtsGJb5d8sNzM1yxlTgtiOF4LQRzqg1QHvmqf5fu+hlARDPS7X8bUN+fP3qKzt1aKZJy1tA9PlJBA6rqM+nV4ehHhEs8V6AMov06jEYkCMj43SVdnOGDDnJjL48KrohpM2nJI6xk3jbYIDVCNophZ4Vs6rwEW4fqbkNW8TxNqQjtGzDpE5KzPmWd17KBhVzJmv2b2zsomUdjqp0zzz+WITApYbYi0N8/bTHGwz5pi5+uSijE5tkflibqTn6UHQsk2TYf7Z5mlu9XPFgomCVb69ax77bCc2eADHN0mBM2nQkdA/fP8BXY07AA2pmF4S2I3+b4d/WsHVlg92wAjWvq1qcxfHC811YCu1m6/CsDwSMYl6i1+1jUr4W5yfRakcL4kdrP9+KuNDWzi4tDo8ziAqXNn5kLHoygf0/Hju8ANHfZqiX+Gd20ZN1ijonr9LoNl+KPuyLy7sc3Q/VtjPGiOvsXJo1V4M3XYfSCx6XpsNb5NmPONLTABh02eJHQxUv2s4obHC7KYnqgReGzmG6phkk6x+DL9D255G+AfIA74ZnfDhFXTNi/4H4LSQfBhpJpiwHCv9nk2yH5hAytT161cWv3RyCK7H/qRVXIk1CnYIp2lzQjDUYFZMAEDPxLNbuCA5iFt6nRJhXkyP5UbLQFlDU=
+  on:
+    branch: master
+    repo: tierratelematics/ninjagoat-dashboard
+    tags: false
