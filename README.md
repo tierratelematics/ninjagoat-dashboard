@@ -94,6 +94,17 @@ class Widget extends WidgetView<WidgetViewModel, WidgetModel> {
 }
 ```
 
+### Access the registered widgets
+
+An "entries" property is available on the DashboardViewModel to access the dictionary of widgets.
+Alternatively you can use a @multiInject for the entries.
+
+```typescript
+constructor(@multiInject("IWidgetEntry") entries:IWidgetEntry<any>) {
+ //Do something with the widgets   
+}
+```
+
 ### Configurable widget
 
 A given widget can be configured if its viewmodel implement the IConfigurableWidget interface.
