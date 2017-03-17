@@ -71,6 +71,8 @@ export class DashboardViewModel extends ObservableViewModel<ModelState<Dashboard
 
     move(positions: WidgetPosition[]);
 
+    resize(id: string, size: WidgetSize);
+
     dispose();
 
     layoutChange(layout: LayoutItem[]);
@@ -141,6 +143,7 @@ export interface IWidgetManager {
     remove(id: string);
     configure(id: string, configuration?: any);
     move(positions: WidgetPosition[]);
+    resize(id: string, size: WidgetSize);
 }
 
 export class WidgetManager implements IWidgetManager {
@@ -154,6 +157,8 @@ export class WidgetManager implements IWidgetManager {
     configure(id: string, configuration?: any);
 
     move(positions: WidgetPosition[]);
+
+    resize(id: string, size: WidgetSize);
 }
 
 export interface WidgetPosition {
