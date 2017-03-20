@@ -40,7 +40,7 @@ export class ReactiveSettingsManager implements IReactiveSettingsManager {
     setValueAsync<T>(key: string, value: T): Promise<void>;
 }
 
-export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>];
+export type WidgetItem = [IWidgetSettings<any>, IViewModel<any>, IWidgetMetadata];
 
 export type DashboardModel = {
     name: string;
