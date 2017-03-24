@@ -103,6 +103,12 @@ export interface IDashboardConfig {
     draggableHandle: string;
 }
 
+export class DefaultDashboardConfig implements IDashboardConfig {
+    sizes: WidgetSize[];
+    rowHeight: number;
+    draggableHandle: string;
+}
+
 export type WidgetSize = {
     name: string;
     width: number;
