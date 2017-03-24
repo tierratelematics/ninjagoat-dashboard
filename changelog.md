@@ -1,3 +1,7 @@
+# 0.2.0
+
+Export DefaultDashboardConfig
+
 # 0.1.3
 
 Update dts

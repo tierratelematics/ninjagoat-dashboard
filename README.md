@@ -105,6 +105,46 @@ constructor(@multiInject("IWidgetEntry") entries:IWidgetEntry<any>) {
 }
 ```
 
+### Showing a dialog with the widgets catalogue
+
+Extends the DashboardViewModel and call ninjagoat-dialogs with the widgets list, then what is done inside the dialog is up to you.
+
+```typescript
+import {DashboardViewModel} from "ninjagoat-dashboard";
+import {inject, multiInject, optional} from "inversify";
+import {IViewModelFactory, IViewModelRegistry, ViewModel} from "ninjagoat";
+import {IWidgetEntry, IDashboardConfig, DefaultDashboardConfig, IWidgetManagerFactory} from "ninjagoat-dashboard";
+import {IDialogService, DialogStatus} from "ninjagoat-dialogs";
+
+@ViewModel("Dashboard")
+class CustomDashboardViewModel extends DashboardViewModel {
+
+    constructor(@multiInject("IWidgetEntry") widgets: IWidgetEntry<any>[],
+                @inject("IViewModelFactory") viewmodelFactory: IViewModelFactory,
+                @inject("IWidgetManagerFactory") widgetManagerFactory: IWidgetManagerFactory,
+                @inject("IViewModelRegistry") registry: IViewModelRegistry,
+                @inject("IDashboardConfig") @optional() config: IDashboardConfig = new DefaultDashboardConfig(),
+                @inject("IDialogService") private dialogService: IDialogService,) {
+        super(widgets, viewmodelFactory, widgetManagerFactory, registry, config);
+    }
+
+    showWidgetsCatalogue() {
+        let dialogData = {
+            widgets: this.entries,
+            selectedWidget: null,
+            selectedSize: null
+        };
+        this.dialogService.display("your_widgets_catalogue_dialog_id", dialogData, null).then((status: DialogStatus) => {
+            //Selected widget and size is populated inside the dialog
+            if (status === DialogStatus.Confirmed && dialogData.selectedWidget) {
+                this.add(dialogData.selectedWidget, dialogData.selectedSize);
+            }
+        });
+    }
+}
+
+```
+
 ### Configurable widget
 
 A given widget can be configured if its viewmodel implement the IConfigurableWidget interface.

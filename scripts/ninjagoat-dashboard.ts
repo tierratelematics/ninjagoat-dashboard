@@ -6,3 +6,4 @@ export {ReactiveSettingsManager} from "./ReactiveSettingsManager";
 export {WidgetManager} from "./widget/WidgetManager";
 export {default as WidgetView} from "./view/WidgetView";
 export {default as Card} from "./view/Card";
+export {DefaultDashboardConfig} from "./DashboardConfig";
