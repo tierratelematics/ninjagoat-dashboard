@@ -1,3 +1,7 @@
+# 0.3.0
+
+Use react as dependency
+
 # 0.2.0
 
 Export DefaultDashboardConfig
