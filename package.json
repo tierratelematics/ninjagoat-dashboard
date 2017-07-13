@@ -1,10 +1,10 @@
 {
   "name": "ninjagoat-dashboard",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "dependencies": {
     "@types/lodash": "~4.14.44",
     "@types/node": "~6.0.52",
-    "@types/react": "~0.14.55",
+    "@types/react": "^15.0.38",
     "inversify": "~3.0.0-rc.2",
     "lodash": "~4.10.0",
     "react": "^15.4.1",
@@ -20,7 +20,7 @@
     "typemoq": "~1.2.1"
   },
   "peerDependencies": {
-    "ninjagoat": "^2.3.0",
+    "ninjagoat": "^2.4.0",
     "ninjagoat-projections": "^2.1.0"
   },
   "scripts": {
